@@ -1,0 +1,307 @@
+@extends('main')
+@section('content')
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('Dashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">List of Issuing</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="">
+                                @if($user_perm -> contains('slug_name', "Issuing.store"))
+                                        <h3><center><strong>For Borrowing of Books</strong></center></h3>
+                                        <button type="button" class="btn  btn-primary btn-md col-md-2" data-toggle="modal" data-target="#modal">
+                                            <span class="fa fa-plus"></span>
+                                            Issue Materials
+                                        </button>
+                                @endif
+                                <div class="modal" id="modal">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Borrowing Form</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form id="form">
+                                                <div class="modal-body">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="id" id="id">
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                            <label for="">Search Material Accession No.:</label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                                            <select  class="form-control" name="materials" id="materials" placeholder="Search Materials">
+                                                                <option value=""> Choose option </option>
+                                                                @foreach($materials as $materials)
+                                                                    <option value={{ $materials -> materials_id}}> {{ $materials -> accnum}}</option>
+                                                                    @foreach($copies as $copy)
+                                                                        @if($materials->materials_id == $copy -> materials_id)
+
+                                                                            @if(($materials->copies - $copy -> quantity) <= 0)
+                                                                            @else
+                                                                                <option value={{ $materials -> materials_id}}> {{ $materials -> accnum}}</option>
+                                                                            @endif
+                                                                        @else
+                                                                            @if(($materials->copies - $copy -> quantity) <= 0)
+                                                                            @else
+                                                                                <option value={{ $materials -> materials_id}}> {{ $materials -> accnum}}</option>
+                                                                            @endif
+                                                                        @endif
+                                                                    @endforeach
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                        <label for="">Borrower: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                                            <select class="form-control" id="borrower" name="borrower" placeholder="Enter Borrower">
+                                                                <option value=""> Choose option </option>
+                                                                @foreach($borrower as $borrower)
+                                                                <option value={{ $borrower -> id}}> {{ $borrower -> lastname}},{{ $borrower -> firstname}} {{ $borrower -> middlename}} </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    {{-- <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="">Claim Date: </label>
+                                                            <input type="date" class="form-control" name="claim" id="claim" placeholder="Enter Claim Date">
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label for="">Return Date:</label>
+                                                            <input type="date" class="form-control" name="return" id="return" placeholder="Enter Return Date">
+                                                        </div>
+                                                    </div> --}}
+
+                                                </div>
+                                                <div class="modal-footer justify-content-between">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive">
+                            <table id="datatable" class="table table-bordered table-striped">
+                                <thead class="text-center">
+                                <tr>
+                                    <th class="text-center">ID NO</th>
+                                    <th class="text-center">MATERIALS ACC NUM</th>
+                                    <th class="text-center">BORROWER NAME</th>
+                                    <th class="text-center">CLAIM DATE</th>
+                                    <th class="text-center">RETURN DATE</th>
+                                    @if($user_perm -> contains('slug_name', "Issuing.show") || $user_perm->contains('slug_name', 'IssuingDelete'))
+                                    <th class="text-center">ACTIONS</th>
+                                    @endif
+                                </tr>
+                                </thead>
+                                <tbody class="text-center">
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function(){
+
+            $('.select2').select2({
+                theme: "classic",
+                width: "resolve"
+            });
+
+            $('#modal').on('hidden.bs.modal', function (e) {
+                $('.form-control').removeClass('is-invalid');
+                $('.modal-body .form-group')
+                    .find("input,textarea,select")
+                    .val('')
+                    .end()
+                    .find("input[type=checkbox], input[type=radio]")
+                    .prop("checked", "")
+                    .end();
+            })
+
+            $('#form').validate({
+                rules: {
+                    materials: {
+                        required: true,
+                    },
+                    borrower: {
+                        required: true,
+                    },
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                },
+                submitHandler: function(form) {
+                    jQuery.ajax({
+                        url:'{{ route('Issuing.store') }}',
+                        type: "post",
+                        data: {
+                            '_token': $('input[name=_token]').val(),
+                            'id' : $('#id').val(),
+                        },
+                        data: $('#form').serialize(),
+                        success: function(response){
+                            if(response.status == "success"){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.message
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            }else{
+
+                            }
+                        }
+                    });
+                }
+            });
+
+            var table = $('#datatable').DataTable({
+                processing: true,
+                serverSide: true,
+                bjQueryUI: true,
+                ajax : {
+                    url : "{{ route('IssuingDatatables') }}",
+                    type : "GET",
+                    dataType: 'JSON'
+                },
+                columns: [
+                    {data: 'id', name: 'a.id'},
+                    {data: 'accnum', name: 'c.accnum'},
+                    {data: 'fullname', name: 'fullname'},
+                    {data: 'date_borrowed', name: 'a.date_borrowed'},
+                    {data: 'date_returned', name: 'a.date_returned'},
+                    @if($user_perm -> contains('slug_name', "Issuing.show") || $user_perm->contains('slug_name', 'IssuingDelete'))
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: true,
+                        searchable: true
+                    },
+                    @endif
+                ],
+                dom: 'Bfrtip',
+                responsive: true,  "autoWidth": false,
+                buttons: ["csv", "excel", "pdf", "print"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+            $(document).on('click', '.data-edit', function(){
+                $('#modal').modal('show');
+                var id = $(this).attr("data-id");
+                var url = '{{ route('Issuing.show', ":id") }}';
+                url = url.replace(':id', id);
+                $.ajax({
+                    type:"GET",
+                    url: url,
+                    // get all form field value in serialize form
+                    success: function(response){
+                        /*swal.fire("Sorry this function currently not working");*/
+                        if(response[0]){
+                            $('#id').val(response[0].id);
+                            $('#materials').val(response[0].materials_id);
+                            $('#borrower').val(response[0].users_id);
+                            // $('#claim').val(response[0].date_borrowed);
+                            // $('#return').val(response[0].date_returned);
+                        }else{
+                            swal.fire("Something is error please contact developer", "","error");
+                        }
+                    }
+                });
+            });
+
+
+            $(document).on('click' , '.data-delete' , function(){
+                var id = $(this).attr("data-id");
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to return the book!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Return it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type:"POST",
+                            url: '{{ route('IssuingDelete') }}' ,
+                            data: {
+                                '_token': $('input[name=_token]').val(),
+                                'id' : id,
+                            }, // get all form field value in serialize form
+                            success: function(response){
+                                /*swal.fire("Sorry this function currently not working");*/
+                                if(response.status == "success"){
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'Your Book has been returned.',
+                                        'success'
+                                    ).then(function(){
+                                        location.reload();
+                                    });
+                                }else{
+                                    swal.fire("Something is error please contact developer", "","error");
+                                }
+                            }
+                        });
+
+                    }else{
+                        Swal.fire(
+                            'Book is not returned!',
+                            '',
+                            'info'
+                        )
+                    }
+                })
+            });
+
+        })
+    </script>
+@endsection
