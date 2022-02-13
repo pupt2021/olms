@@ -24,6 +24,9 @@ class DatabaseSeeder extends Seeder
             MaterialsSeeder::class,
             UserLinksParentSeeder::class,
             UserLinksSeeder::class,
+            UserSeeder::class,
+            UserPermissionsSeeder::class,
+            UserDetailsSeeder::class,
 
             //
             MaterialsSubjectLinkSeeder::class,
