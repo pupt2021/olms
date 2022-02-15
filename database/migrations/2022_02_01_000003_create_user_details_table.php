@@ -14,26 +14,28 @@ class CreateUserDetailsTable extends Migration
     public function up()
     {
         Schema::create('user_details', function (Blueprint $table) {
-            $table->id('user_id');
+            $table->id();
+            $table->foreignId('user_id');
             $table->foreignId('course_id');
-            $table->foreignId('gender_id');
-            $table->string('image_url');
+            $table->foreignId('gender_id')->nullable()->default(NULL);
+            $table->string('image_url')->nullable()->default(NULL);
             $table->string('firstname');
             $table->string('lastname');
-            $table->string('middlename');
-            $table->date('birthday');
-            $table->string('contact_no');
-            $table->string('address');
-            $table->string('barangay');
-            $table->string('city');
-            $table->string('zip_code');
+            $table->string('middlename')->nullable()->default(NULL);
+            $table->date('birthday')->nullable()->default(NULL);
+            $table->string('contact_no')->nullable()->default(NULL);
+            $table->string('address')->nullable()->default(NULL);
+            $table->string('barangay')->nullable()->default(NULL);
+            $table->string('city')->nullable()->default(NULL);
+            $table->string('zip_code')->nullable()->default(NULL);
             $table->string('stud_number');
-            $table->string('faculty_code');
-            $table->string('employee_number');
-            $table->integer('employee_status');
+            $table->string('faculty_code')->nullable()->default(NULL);
+            $table->string('employee_number')->nullable()->default(NULL);
+            $table->integer('employee_status')->nullable()->default(NULL);
 
             $table->foreign('course_id')->references('id')->on('courses');
             $table->foreign('gender_id')->references('id')->on('gender');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
