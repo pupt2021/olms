@@ -187,12 +187,17 @@ hr {
                             if(response.status == "success"){
                                 Swal.fire({
                                     icon: 'success',
-                                    title: response.message,
+                                    title: String(response.message),
                                 }).then((result) => {
                                     location.reload();
                                 });
-                            }else{
-
+                            }else if(response.status == "error"){
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: String(response.message),
+                                }).then((result) => {
+                                    location.reload();
+                                });
                             }
                         }
                     });

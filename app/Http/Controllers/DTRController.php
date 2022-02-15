@@ -72,48 +72,57 @@ class DTRController extends Controller
     public function dtr_login(Request $request){
         extract($request->all());
 
+        //Check if username and password is correct
+        $credentials = $request->only('username', 'password');
+        if (! Auth::attempt($credentials)) {
+            // If account credentials is wrong...
+            return response()->json(['status' => 'error' , 'message' => 'Incorrect Username or Password']);
+        }
+
+        // Get User Information
         $users = db::table('users')
             ->where('username', $username)
-            ->get();
-
-        foreach($users as $data){
-            $id = $data->id;
-        }
+            ->first();
 
         $user_details = db::table('user_details')
-            ->where('user_id', $id)
-            ->get();
+            ->where('user_id', $users->id)
+            ->first();
 
-        foreach($user_details as $data_details){
-            $fullname = $data_details -> lastname . ',' . $data_details -> firstname .' '. $data_details ->middlename;
-        }
+        $fullname = $user_details->lastname . ', ' . $user_details->firstname . ' ' . $user_details->middlename;
 
+        // Get Current DTR Information of User
         $existing_dtr = db::table('timein')
-            ->where('users_id', $id)
+            ->where('users_id', $users->id)
             ->where('status', '!=', 0)
             ->get();
 
-        if(count($existing_dtr) > 0){
+        // If user is timed-in
+        if(($existing_dtr)->isNotEmpty())
+        {
+            // Time-out the existing DTR Entry
             DB::table('timein')
-                ->where('users_id', $id)
+                ->where('users_id', $users->id)
                 ->update([
                         'status' => 0,
                         'timeout' => carbon::now()
                     ]);
 
-            $message = $fullname . "is successfully Time-out";
-        }else{
+            $message = $fullname . "has successfully <br> Timed-out";
+        }
+        else
+        {
+            // Time-in the the User in new DTR Entry
             db::table('timein')
             ->insert([
-                'users_id' => $id,
+                'users_id' => $users->id,
                 'timein' => carbon::now(),
                 'status'  => 1
             ]);
-            $message = $fullname . " is successfully Time-in";
+            $message = $fullname . " has successfully <br> Timed-in";
         }
 
         return response()->json(['status' => 'success' , 'message' => $message]);
-    } // End of function
+    }
 
     public function mainpage(Request $request){
         extract($request->all());
