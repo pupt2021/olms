@@ -17,6 +17,7 @@ class CreateUserPermissionTable extends Migration
             $table->foreignId('user_id');
             $table->foreignId('role_id');
             $table->foreignId('link_id');
+            $table->string('status')->default('On');
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('role_id')->references('role_id')->on('user_role');

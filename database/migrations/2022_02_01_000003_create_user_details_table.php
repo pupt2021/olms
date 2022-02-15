@@ -14,9 +14,8 @@ class CreateUserDetailsTable extends Migration
     public function up()
     {
         Schema::create('user_details', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('course_id');
+            $table->id('user_id');
+            $table->foreignId('course_id')->nullable()->default(NULL);;
             $table->foreignId('gender_id')->nullable()->default(NULL);
             $table->string('image_url')->nullable()->default(NULL);
             $table->string('firstname');
@@ -35,7 +34,6 @@ class CreateUserDetailsTable extends Migration
 
             $table->foreign('course_id')->references('id')->on('courses');
             $table->foreign('gender_id')->references('id')->on('gender');
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -47,6 +45,7 @@ class CreateUserDetailsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('user_details');
-        $table->dropForeign('role_id');
+        $table->dropForeign('course_id');
+        $table->dropForeign('gender_id');
     }
 }

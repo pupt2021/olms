@@ -17,12 +17,11 @@ class UserDetailsSeeder extends Seeder
             //1
             [
                 'user_id' => '2',
-                'image_url' => NULL,
+                'image_url' => 'Bangga-Christian Elvin.jpg',
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Christian Elvin',
                 'lastname' => 'Bangga',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -31,9 +30,9 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00525-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
                 'user_id' => '3',
                 'image_url' => NULL,
@@ -42,7 +41,6 @@ class UserDetailsSeeder extends Seeder
                 'firstname' => 'Eugene',
                 'lastname' => 'Raynera',
                 'middlename' => NULL,
-                'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
                 'city' => NULL,
@@ -50,9 +48,9 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00086-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
                 'user_id' => '4',
                 'image_url' => NULL,
@@ -61,7 +59,6 @@ class UserDetailsSeeder extends Seeder
                 'firstname' => 'Jannielyn',
                 'lastname' => 'Etin',
                 'middlename' => NULL,
-                'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
                 'city' => NULL,
@@ -69,9 +66,9 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2019-00114-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
                 'user_id' => '5',
                 'image_url' => NULL,
@@ -80,7 +77,6 @@ class UserDetailsSeeder extends Seeder
                 'firstname' => 'Lougen',
                 'lastname' => 'Gierza',
                 'middlename' => NULL,
-                'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
                 'city' => NULL,
@@ -88,9 +84,9 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2019-00126-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
                 'user_id' => '6',
                 'image_url' => NULL,
@@ -99,7 +95,6 @@ class UserDetailsSeeder extends Seeder
                 'firstname' => 'Ken Zedric',
                 'lastname' => 'Cortes',
                 'middlename' => NULL,
-                'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
                 'city' => NULL,
@@ -107,9 +102,9 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00342-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
                 'user_id' => '7',
                 'image_url' => NULL,
@@ -118,7 +113,6 @@ class UserDetailsSeeder extends Seeder
                 'firstname' => 'Joymee',
                 'lastname' => 'Dionisio',
                 'middlename' => NULL,
-                'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
                 'city' => NULL,
@@ -126,9 +120,9 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => 'JDionisio',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
                 'user_id' => '8',
                 'image_url' => NULL,
@@ -137,7 +131,6 @@ class UserDetailsSeeder extends Seeder
                 'firstname' => 'Lessa Anne',
                 'lastname' => 'Pascubillo',
                 'middlename' => NULL,
-                'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
                 'city' => NULL,
@@ -145,18 +138,17 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00366-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
                 'user_id' => '9',
-                'image_url' => NULL,
+                'image_url' => 'Llagas-Pauline Jane.png',
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Pauline Jane',
                 'lastname' => 'Llagas',
                 'middlename' => 'Santos',
-                'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
                 'city' => NULL,
@@ -164,17 +156,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00218-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
                 'user_id' => '10',
-                'image_url' => NULL,
+                'image_url' => 'Virtusio-Aira Dynielle.jpg',
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Aira Dynielle',
                 'lastname' => 'Virtusio',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -183,17 +174,34 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2019-00422-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
                 'user_id' => '11',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
+                'firstname' => 'Aira Dynielle',
+                'lastname' => 'Virtusio',
+                'middlename' => NULL,
+                'contact_no' => NULL,
+                'barangay' => NULL,
+                'city' => NULL,
+                'zip_code' =>NULL,
+                'stud_number' => '2019-00422-TG-0',
+                'faculty_code' => NULL,
+                'employee_number' => NULL,
+                
+            ],
+
+            [
+                'user_id' => '12',
+                'image_url' => NULL,
+                'course_id' => 1,
+                'gender_id' => Null,
                 'firstname' => 'Quiel Jeremiah',
                 'lastname' => 'Cariaso',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -202,17 +210,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00220-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '12',
+                'user_id' => '13',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Ed Mhar',
                 'lastname' => 'Apura',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -221,11 +228,10 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00231-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
             [
-                'user_id' => '12',
+                'user_id' => '14',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
@@ -240,17 +246,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00341-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '13',
+                'user_id' => '15',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Lailynette',
                 'lastname' => 'Burton',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -259,17 +264,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00484-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '14',
+                'user_id' => '16',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Charmie',
                 'lastname' => 'Cabanela',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -278,17 +282,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00343-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '15',
+                'user_id' => '17',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Joshua',
                 'lastname' => 'Capalaran',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -297,17 +300,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00256-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '16',
+                'user_id' => '18',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'John Russel',
                 'lastname' => 'Dacanay',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -316,17 +318,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00361-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '17',
+                'user_id' => '19',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Edmon',
                 'lastname' => 'Dela Cruz',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -335,17 +336,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00368-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '18',
+                'user_id' => '20',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Erjohn',
                 'lastname' => 'Espuerta',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -354,17 +354,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00353-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '19',
+                'user_id' => '21',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Froilan',
                 'lastname' => 'Fernandez',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -373,17 +372,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00379-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '20',
+                'user_id' => '22',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Raymond',
                 'lastname' => 'Gabito',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -392,17 +390,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00322-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '21',
+                'user_id' => '23',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Jerome',
                 'lastname' => 'Jalandoon',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -411,17 +408,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00293-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '22',
+                'user_id' => '24',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Crisologo',
                 'lastname' => 'Lapitan',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -430,17 +426,15 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00315-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
             [
-                'user_id' => '23',
+                'user_id' => '25',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Van',
                 'lastname' => 'Laude',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -449,17 +443,15 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00487-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
             [
-                'user_id' => '24',
+                'user_id' => '26',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Christian',
                 'lastname' => 'Lazaro',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -468,17 +460,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00523-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '25',
+                'user_id' => '27',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'David',
                 'lastname' => 'Limba',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -487,17 +478,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00299-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '26',
+                'user_id' => '28',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Lenard',
                 'lastname' => 'Llacer',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -506,17 +496,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00376-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '27',
+                'user_id' => '29',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Zairanih',
                 'lastname' => 'Lumabi',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -525,17 +514,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00349-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '28',
+                'user_id' => '30',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Maglente',
                 'lastname' => 'Nerissa',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -544,17 +532,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00330-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '29',
+                'user_id' => '31',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Jamrei',
                 'lastname' => 'Manalo',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -563,17 +550,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00328-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '30',
+                'user_id' => '32',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Marcus',
                 'lastname' => 'Manuel',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -582,17 +568,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00372-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '31',
+                'user_id' => '33',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Meriel',
                 'lastname' => 'Manuel',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -601,17 +586,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00305-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '32',
+                'user_id' => '34',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Jonh Carlo',
                 'lastname' => 'Navaja',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -620,17 +604,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00513-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '33',
+                'user_id' => '35',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Jillian',
                 'lastname' => 'Pollescas',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -639,17 +622,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00345-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '34',
+                'user_id' => '36',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Mary Grace',
                 'lastname' => 'Ragpala',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -658,17 +640,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00354-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '35',
+                'user_id' => '37',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Jasmine',
                 'lastname' => 'Rakim',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -677,17 +658,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00260-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '36',
+                'user_id' => '38',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Shailyn',
                 'lastname' => 'Sa - an',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -696,17 +676,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00355-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '37',
+                'user_id' => '39',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Jamie',
                 'lastname' => 'Samar',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -715,17 +694,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00338-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+            
             [
-                'user_id' => '38',
+                'user_id' => '40',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Aldrin',
                 'lastname' => 'Seroje',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -734,17 +712,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00263-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '39',
+                'user_id' => '41',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'John Timothy',
                 'lastname' => 'Sescar',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -753,17 +730,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00313-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '40',
+                'user_id' => '42',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Carlito',
                 'lastname' => 'Sollano',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -772,17 +748,16 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00370-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '41',
+                'user_id' => '43',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Bernadette',
                 'lastname' => 'Tradio',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -791,47 +766,9 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2018-00304-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
                 
             ],
-            [
-                'user_id' => '42',
-                'image_url' => NULL,
-                'course_id' => 1,
-                'gender_id' => Null,
-                'firstname' => 'John',
-                'lastname' => 'Doe',
-                'middlename' => NULL,
-                'middlename' => NULL,
-                'contact_no' => NULL,
-                'barangay' => NULL,
-                'city' => NULL,
-                'zip_code' =>NULL,
-                'stud_number' => '2018-00342-TG-0',
-                'faculty_code' => NULL,
-                'employee_number' => NULL,
-                'employee_number' => NULL,
-                
-            ],
-            [
-                'user_id' => '43',
-                'image_url' => NULL,
-                'course_id' => 1,
-                'gender_id' => Null,
-                'firstname' => 'John',
-                'lastname' => 'Doe',
-                'middlename' => NULL,
-                'middlename' => NULL,
-                'contact_no' => NULL,
-                'barangay' => NULL,
-                'city' => NULL,
-                'zip_code' =>NULL,
-                'stud_number' => '2018-00111-TG-0',
-                'faculty_code' => NULL,
-                'employee_number' => NULL,
-                'employee_number' => NULL,
-                
-            ],
+
             [
                 'user_id' => '44',
                 'image_url' => NULL,
@@ -840,44 +777,149 @@ class UserDetailsSeeder extends Seeder
                 'firstname' => 'John',
                 'lastname' => 'Doe',
                 'middlename' => NULL,
-                'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
                 'city' => NULL,
                 'zip_code' =>NULL,
-                'stud_number' => '2018-00123-TG-0',
+                'stud_number' => '2017-00342-TG-0',
                 'faculty_code' => NULL,
-                'employee_number' => NULL,
                 'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '45',
+                'user_id' => 45,
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'John',
                 'lastname' => 'Doe',
                 'middlename' => NULL,
+                'contact_no' => NULL,
+                'barangay' => NULL,
+                'city' => NULL,
+                'zip_code' =>NULL,
+                'stud_number' => '2017-00111-TG-0',
+                'faculty_code' => NULL,
+                'employee_number' => NULL,
+                
+            ],
+           
+            [
+                'user_id' => 46,
+                'image_url' => NULL,
+                'course_id' => NULL,
+                'gender_id' => 1,
+                'firstname' => 'John',
+                'lastname' => 'Doe',
+                'middlename' => 'Johhny',
+                'contact_no' => '09562679248',
+                'barangay' => NULL,
+                'city' => 'City',
+                'zip_code' => '1632',
+                'stud_number' => '2018-00123-TG-0',
+                'faculty_code' => NULL,
+                'employee_number' => NULL,
+                
+            ],
+            
+            [
+                'user_id' => 47,
+                'image_url' => NULL,
+                'course_id' => 1,
+                'gender_id' => Null,
+                'firstname' => 'John',
+                'lastname' => 'Doe',
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
                 'city' => NULL,
                 'zip_code' =>NULL,
-                'stud_number' => '2018-00121-TG-0',
+                'stud_number' => '2017-00112-TG-0',
                 'faculty_code' => NULL,
-                'employee_number' => NULL,
                 'employee_number' => NULL,
                 
             ],
+
             [
-                'user_id' => '46',
+                'user_id' => '48',
+                'image_url' => NULL,
+                'course_id' => 1,
+                'gender_id' => Null,
+                'firstname' => 'John',
+                'lastname' => 'Doe',
+                'middlename' => NULL,
+                'contact_no' => NULL,
+                'barangay' => NULL,
+                'city' => NULL,
+                'zip_code' =>NULL,
+                'stud_number' => '2017-00113-TG-0',
+                'faculty_code' => NULL,
+                'employee_number' => NULL,
+                
+            ],
+
+            [
+                'user_id' => '49',
+                'image_url' => NULL,
+                'course_id' => 1,
+                'gender_id' => Null,
+                'firstname' => 'John',
+                'lastname' => 'Doe',
+                'middlename' => NULL,
+                'contact_no' => NULL,
+                'barangay' => NULL,
+                'city' => NULL,
+                'zip_code' =>NULL,
+                'stud_number' => '2017-00114-TG-0',
+                'faculty_code' => NULL,
+                'employee_number' => NULL,
+                
+            ],
+
+            [
+                'user_id' => '50',
+                'image_url' => NULL,
+                'course_id' => 1,
+                'gender_id' => Null,
+                'firstname' => 'John',
+                'lastname' => 'Doe',
+                'middlename' => NULL,
+                'contact_no' => NULL,
+                'barangay' => NULL,
+                'city' => NULL,
+                'zip_code' =>NULL,
+                'stud_number' => '2017-00115-TG-0',
+                'faculty_code' => NULL,
+                'employee_number' => NULL,
+                
+            ],
+
+            [
+                'user_id' => '51',
+                'image_url' => NULL,
+                'course_id' => 1,
+                'gender_id' => Null,
+                'firstname' => 'John',
+                'lastname' => 'Doe',
+                'middlename' => NULL,
+                'contact_no' => NULL,
+                'barangay' => NULL,
+                'city' => NULL,
+                'zip_code' =>NULL,
+                'stud_number' => '2017-00116-TG-0',
+                'faculty_code' => NULL,
+                'employee_number' => NULL,
+                
+            ],
+
+            [
+                'user_id' => '52',
                 'image_url' => NULL,
                 'course_id' => 1,
                 'gender_id' => Null,
                 'firstname' => 'Richard',
                 'lastname' => 'Gabito',
-                'middlename' => NULL,
                 'middlename' => NULL,
                 'contact_no' => NULL,
                 'barangay' => NULL,
@@ -886,8 +928,6 @@ class UserDetailsSeeder extends Seeder
                 'stud_number' => '2020-00000-TG-0',
                 'faculty_code' => NULL,
                 'employee_number' => NULL,
-                'employee_number' => NULL,
-                
             ],
         ];
         DB::table('user_details')->insert($data);

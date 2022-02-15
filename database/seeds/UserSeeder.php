@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         $data = [
             //1
             [
-                'role_id' => '3',
+                'role_id' => 1,
                 'username' => 'puptlibrary2021',
                 'email' => 'admin@email.com',
                 'password' => Hash::make('admin'),
@@ -578,9 +578,9 @@ class UserSeeder extends Seeder
             //44
             [
                 'role_id' => '3',
-                'username' => '2018-00123-TG-0',
+                'username' => '2017-00342-TG-0',
                 'email' => 'johndoe@gmail.com',
-                'password' => Hash::make('2018-00123-TG-0'),
+                'password' => Hash::make('2017-00342-TG-0'),
                 'limit' => NULL,
                 'status' => '1',
                 'remember_token' => NULL,
@@ -588,20 +588,106 @@ class UserSeeder extends Seeder
                 'updated_at' => $currentTime,
                 'deleted_at' => NULL,
             ],
+
             //45
             [
                 'role_id' => '3',
-                'username' => '2018-00121-TG-0',
+                'username' => '2017-00111-TG-0',
                 'email' => 'johndoe@gmail.com',
-                'password' => Hash::make('2018-00121-TG-0'),
+                'password' => Hash::make('2017-00111-TG-0'),
+                'updated_at' => $currentTime,
                 'limit' => NULL,
                 'status' => '1',
                 'remember_token' => NULL,
                 'created_at' => $currentTime,
-                'updated_at' => $currentTime,
                 'deleted_at' => NULL,
             ],
+
             //46
+            [
+                'role_id' => '3',
+                'username' => '2018-00123-TG-0',
+                'email' => 'johndoe@gmail.com',
+                'password' => Hash::make('2018-00123-TG-0'),
+                'updated_at' => $currentTime,
+                'limit' => NULL,
+                'status' => '1',
+                'remember_token' => NULL,
+                'created_at' => $currentTime,
+                'deleted_at' => NULL,
+            ],
+
+            //47
+            [
+                'role_id' => '3',
+                'username' => '2017-00112-TG-0',
+                'email' => 'johndoe@gmail.com',
+                'password' => Hash::make('2017-00112-TG-0'),
+                'updated_at' => $currentTime,
+                'limit' => NULL,
+                'status' => '1',
+                'remember_token' => NULL,
+                'created_at' => $currentTime,
+                'deleted_at' => NULL,
+            ],
+
+            //48
+            [
+                'role_id' => '3',
+                'username' => '2017-00113-TG-0',
+                'email' => 'johndoe@gmail.com',
+                'password' => Hash::make('2017-00113-TG-0'),
+                'updated_at' => $currentTime,
+                'limit' => NULL,
+                'status' => '1',
+                'remember_token' => NULL,
+                'created_at' => $currentTime,
+                'deleted_at' => NULL,
+            ],
+
+            //49
+            [
+                'role_id' => '3',
+                'username' => '2017-00114-TG-0',
+                'email' => 'johndoe@gmail.com',
+                'password' => Hash::make('2017-00114-TG-0'),
+                'updated_at' => $currentTime,
+                'limit' => NULL,
+                'status' => '1',
+                'remember_token' => NULL,
+                'created_at' => $currentTime,
+                'deleted_at' => NULL,
+            ],
+
+            //50
+            [
+                'role_id' => '3',
+                'username' => '2017-00115-TG-0',
+                'email' => 'johndoe@gmail.com',
+                'password' => Hash::make('2017-00115-TG-0'),
+                'updated_at' => $currentTime,
+                'limit' => NULL,
+                'status' => '1',
+                'remember_token' => NULL,
+                'created_at' => $currentTime,
+                'deleted_at' => NULL,
+            ],
+
+            //51
+            [
+                'role_id' => '3',
+                'username' => '2017-00116-TG-0',
+                'email' => 'johndoe@gmail.com',
+                'password' => Hash::make('2017-00116-TG-0'),
+                'updated_at' => $currentTime,
+                'limit' => NULL,
+                'status' => '1',
+                'remember_token' => NULL,
+                'created_at' => $currentTime,
+                'deleted_at' => NULL,
+            ],
+
+            //52
             [
                 'role_id' => '3',
                 'username' => '2020-00000-TG-0',
