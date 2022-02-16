@@ -11,7 +11,10 @@
                         <li class="breadcrumb-item">
                             <a href="{{ route('Dashboard') }}">Dashboard</a>
                         </li>
-                        <li class="breadcrumb-item active">List of Materials</li>
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('Material.index') }}">Materials</a>
+                        </li>
+                        <li class="breadcrumb-item active">Material View</li>
                     </ol>
                 </div>
             </div>
@@ -22,53 +25,123 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
-                            <div class="">
-                                @if($user_perm -> contains('slug_name', "Material.store"))
-                                        <button type="button" class="btn  btn-primary btn-md col-md-2 btn-add" data-toggle="modal" data-target="#modal">
-                                            <span class="fa fa-plus"></span>
-                                            Add Materials
-                                        </button>
-                                       {{-- <button type="button" class="btn btn-primary btn-md col-md-2 float-right" data-toggle="modal" data-target="#modal">
-                                            <span class="fa fa-plus"></span>
-                                            Add Batch Materials
-                                        </button>--}}
-                                @endif
+                        <div class="card-body table-responsive">
+                            {{-- Title and ISBN --}}
+                            <div class="row text-center my-1">
+                                <div class="col">
+                                    <h4 class="fw-bold">{{$material->title}}</h4>
+                                    <p>{{$material->isbn}}</p>
+                                </div>
                             </div>
 
-                        </div>
-                        <div class="card-body table-responsive">
-                            <table id="datatable" class="table table-bordered table-striped">
+                            {{-- Material Details --}}
+                            <div class="row my-1">
+
+                                {{-- Column 1 --}}
+                                <div class="col">
+                                    <p>Author: {{$material->author ?? 'NONE PROVIDED'}}</p>
+                                    <p>Publisher: {{$material->publisher ?? 'NONE PROVIDED'}}</p>
+                                    <p>Edition: {{$material->edition ?? 'NONE PROVIDED'}}</p>
+                                    <p>Copyright: {{$material->copyright ?? 'NONE PROVIDED'}}</p>
+                                </div>
+
+                                {{-- Column 2 --}}
+                                <div class="col">
+                                    <p>Call No.: {{$material->callno ?? 'NONE PROVIDED'}}</p>
+                                    <p>Type: 
+                                        @if($material->type === 1)
+                                            {{ 'Borrowing' }}
+                                        @elseif($material->type === 2)
+                                            {{ 'Room Use' }}
+                                        @endif
+                                    </p>
+                                    <p>Total Copies: 
+                                        @if($materialCopies->isNotEmpty())
+                                            {{$materialCopies->count()}}
+                                        @else
+                                            NONE
+                                        @endif
+                                    </p>
+
+                                    {{-- Action Buttons --}}
+                                    <p>Actions: 
+                                        <a type="button" title="ADD COPIES" data-id="{{$material->materials_id}}" class="btn btn-primary material-add-copy-edit" id="material-add-copy-edit">
+                                            <span class="fa fa-plus"></span>
+                                        </a>
+
+                                        <a type="button" title="HISTORY" href="{{ route('Materials_History', ['id' => base64_encode($material->materials_id)]) }}" class="btn btn-info" style="background-color: green">
+                                            <span class="fa fa-history"></span>
+                                        </a>
+
+                                        @if ($user_permission->contains('slug_name', 'Material.show'))
+                                            <a type="button" title="EDIT" class="btn btn-info data-edit" id="data-edit" data-id="{{$material->materials_id}}">
+                                                <span class="fa fa-edit"></span>
+                                            </a>
+                                        @endif
+
+                                        @if ($user_permission->contains('slug_name', 'MaterialsDelete'))
+                                            <a type="button" title="DELETE" class="btn btn-warning data-delete" id="data-delete" data-id="{{$material->materials_id}}">
+                                                <span class="fa fa-trash"></span>
+                                            </a>
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered table-striped my-2">
                                 <thead class="text-center">
                                 <tr>
-                                    <th class="text-center">ID NO</th>
-                                    <th class="text-center">ISBN</th>
-                                    <th class="text-center" style="width: 40%;">TITLE</th>
-                                    <th class="text-center">TYPE</th>
-                                    <th class="text-center">COPIES</th>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">DATE RECIEVED</th>
+                                    <th class="text-center">ACCESSION NUMBER</th>
+                                    <th class="text-center">IS AVAILABLE</th>
                                     <th class="text-center">ACTIONS</th>
                                 </tr>
                                 </thead>
                                 <tbody class="text-center">
+                                    @if($materialCopies->isNotEmpty())
+                                        @php $i = 1; @endphp
+                                        @foreach($materialCopies as $materialCopy)
+                                            <tr>
+                                                <td>{{$i}}</td>
+                                                <td>{{$materialCopy->formatted_date_recieved}}</td>
+                                                <td>{{$materialCopy->accession_number}}</td>
+                                                <td>
+                                                    @if(! $materialCopy->borrows_id === NULL)
+                                                        {{ 'Borrowing ID: ' . $materialCopy->borrows_id}}
+                                                    @else
+                                                        YES
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a type="button" title="EDIT" class="btn btn-info material-copy-edit" id="material-copy-edit" data-id="{{$materialCopy->material_copy_id}}">
+                                                        <span class="fa fa-edit"></span>
+                                                    </a>
 
+                                                </td>
+                                            </tr>
+                                            @php $i += 1; @endphp
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="5">NO COPIES FOUND. ADD ONE HERE</td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
 
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
+                        </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div>
 
-            {{-- MATERIALS FORM MODAL --}}
+        {{-- MATERIALS FORM MODAL --}}
             <div class="modal" id="modal">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Materials Form</h4>
+                            <h4 class="modal-title">Materials Edit Form</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -77,17 +150,6 @@
                             <div class="modal-body">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="id" id="id">
-                                <div class="row">
-                                    <div class="form-group col-md-12 for_edit">
-                                        <label for="">Accession No. Template: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                        <select  class="form-control" name="structure" id="structure" placeholder="Enter Materials Structure">
-                                            <option value=""> Choose option </option>
-                                            @foreach($category as $category)
-                                                <option value="{{ $category->id }}"> {{ $category->cat_structure }} </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="">ISBN: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
@@ -99,14 +161,6 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-md-6 for_edit">
-                                    <label for="">Subject: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                    <select  class="select2" id="subject" name="subject[]" multiple="multiple" required style="width: 100%;">
-                                        @foreach($subject as $subject)
-                                            <option value="{{ $subject->id }}"> {{ $subject->subject_name }} </option>
-                                        @endforeach
-                                    </select>
-                                    </div>
                                     <div class="form-group col-md-6 add_mask">
                                         <label for="">CALL NO:</label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
                                         <input type="text" class="form-control" name="callno" id="callno" placeholder="Enter Call No.">
@@ -139,20 +193,12 @@
                                             <option value="10th Edition">10th Edition</option>
                                         </select>
                                     </div>
-                                    {{-- <div class="form-group col-md-6">
-                                        <label for="">Date Received: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                        <input type="date" class="form-control" name="daterec" id="daterec" placeholder="Enter Date Received: ">
-                                    </div> --}}
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="">Copyright:  </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
                                         <input type="number" class="form-control" name="copyright" id="copyright" placeholder="Enter Copyright: ">
                                     </div>
-                                    {{-- <div class="form-group col-md-4">
-                                        <label for="">Copies: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                        <input type="number" class="form-control" name="copies" value="0" min="0" id="copies" placeholder="Enter Copies: ">
-                                    </div> --}}
                                     <div class="form-group col-md-4">
                                         <label for="">Type:  </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
                                         <select type="text" class="form-control" name="type" id="type" placeholder="Enter Type: ">
@@ -173,7 +219,38 @@
                 </div>
                 <!-- /.modal-dialog -->
             </div>
-        </div>
+
+        {{-- MATERIAL ADD COPY FORM MODAL --}}
+            <div class="materialAddCopyModal modal" id="materialAddCopyModal">
+                <div class="modal-dialog modal-xl" >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add Material Copy</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="materialAddCopyForm">
+                            <div class="modal-body">
+                                {{ csrf_field() }}
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="">Number of Copies: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <input type="number" class="form-control" name="copies" id="copies" placeholder="Enter Number of Copies" min="1" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+
         <!-- /.container-fluid -->
     </section>
 @endsection
@@ -202,6 +279,7 @@
                 $('.add_mask').addClass("col-md-6").removeClass("col-md-12");
             });
 
+            // MATERIAL 
             $('#form').validate({
                 rules: {
                     structure: {
@@ -266,40 +344,9 @@
                 }
             });
 
-            var table = $('#datatable').DataTable({
-                processing: true,
-                serverSide: true,
-                bjQueryUI: true,
-                ajax : {
-                    url : "{{ route('MaterialsDatatables') }}",
-                    type : "GET",
-                    dataType: 'JSON'
-                },
-                columns: [
-                    {data: 'materials_id', name: 'materials_id'},
-                    {data: 'isbn', name: 'isbn'},
-                    {data: 'title', name: 'title'},
-                    {data: 'material_type', name: 'material_type'},
-                    {data: 'copies', name: 'copies'},
-                    @if($user_perm -> contains('slug_name', "Material.show") || $user_perm->contains('slug_name', 'MaterialsDelete'))
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: true,
-                        searchable: true
-                    },
-                    @endif
-                ],
-                dom: 'Bfrtip',
-                responsive: true,  "autoWidth": false,
-                buttons: ["csv", "excel", "pdf", "print"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
             $(document).on('click', '.data-edit', function(){
                 $('#modal').modal('show');
-                var id = $(this).attr("data-id");
-                var url = '{{ route('Materials.ShowEditValues', ":id") }}';
-                url = url.replace(':id', id);
+                var url = "{{ route('Materials.ShowEditValues', ['id' => $material->materials_id]) }}";
                 $.ajax({
                     type:"POST",
                     headers: {
@@ -328,6 +375,119 @@
                 });
             });
 
+            // MATERIAL COPY
+
+            $(document).on('click', '.material-copy-edit', function(){
+                $('#materialCopyModal').modal('show');
+                var copy_id = $(this).attr("data-id");
+                var url = "{{ route('Material.MaterialCopy.ShowEditValues', ['id' => $material->materials_id, 'copy_id' => ':id']) }}";
+                url = url.replace(':id', copy_id);
+                $.ajax({
+                    type:"POST",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    url: url,
+                    // get all form field value in serialize form
+                    success: function(response){
+                        /*swal.fire("Sorry this function currently not working");*/
+                        if(response[0]){
+                            $('#accession_number').val(response[0].accession_number);
+                            $('#date_recieved').val(response[0].date_recieved);
+                        }else{
+                            swal.fire("Something is error please contact developer", "","error");
+                        }
+                    }
+                });
+            });
+
+            $('#materialCopyForm').validate({
+                rules: {
+                    date_recieved: {
+                        required: true,
+                    },
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                },
+                submitHandler: function(form) {
+                    jQuery.ajax({
+                        url:'{{ route('Material.MaterialCopy.store', ['id' => $material->materials_id]) }}',
+                        type: "post",
+                        data: {
+                            '_token': $('input[name=_token]').val(),
+                            'copy_id' : $('#copy_id').val(),
+                        },
+                        data: $('#materialCopyForm').serialize(),
+                        success: function(response){
+                            if(response.status == "success"){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.message
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            }else{
+
+                            }
+                        }
+                    });
+                }
+            });
+
+            $(document).on('click', '.material-add-copy-edit', function(){
+                $('#materialAddCopyModal').modal('show');
+            });
+
+            $('#materialAddCopyForm').validate({
+                rules: {
+                    copies: {
+                        required: true,
+                    },
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                },
+                submitHandler: function(form) {
+                    jQuery.ajax({
+                        url:'{{ route('Material.MaterialCopy.store', ['id' => base64_encode($material->materials_id)]) }}',
+                        type: "post",
+                        data: {
+                            '_token': $('input[name=_token]').val(),
+                            'copies' : $('#copies').val(),
+                        },
+                        data: $('#materialAddCopyForm').serialize(),
+                        success: function(response){
+                            if(response.status == "success"){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.message
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            }else{
+
+                            }
+                        }
+                    });
+                }
+            });
 
             $(document).on('click' , '.data-delete' , function(){
                 var id = $(this).attr("data-id");
@@ -356,7 +516,7 @@
                                         'Your Data has been deleted.',
                                         'success'
                                     ).then(function(){
-                                        location.reload();
+                                        window.location = "{{ route('Material.index') }}"
                                     });
                                 }else{
                                     swal.fire("Something is error please contact developer", "","error");

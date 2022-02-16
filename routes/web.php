@@ -84,9 +84,17 @@ route::get('/Permissions/Datatables', ['uses'=>'PermissionController@PermissionD
 
 /* Materials Category-Subject Controller */
 
+// Material Copies Routes
+route::post('/Material/{id}/Copies/Store', ['uses'=>'MaterialController@MaterialCopyStore' , 'as' => 'Material.MaterialCopy.store']);
+route::post('/Material/{id}/Copies/{copy_id}/ShowEditValues', ['uses'=>'MaterialController@MaterialCopyShowEditValues' , 'as' => 'Material.MaterialCopy.ShowEditValues']);
+
 route::get('/Material/Datatables', ['uses'=>'MaterialController@MaterialsDatatables' , 'as' => 'MaterialsDatatables']);
 route::post('/Material/Delete', ['uses' => 'MaterialController@MaterialsDelete' , 'as' => 'MaterialsDelete']);
 route::get('/Material/History/{id}', ['uses'=>'MaterialController@Materials_History' , 'as' => 'Materials_History']);
+
+// Route for getting Edit Values on Materials
+route::post('/Material/Edit/{id}', ['uses'=>'MaterialController@showEditValues' , 'as' => 'Materials.ShowEditValues']);
+
 route::get('/Material/History-Datatables/{id}', ['uses'=>'MaterialController@Materials_History_Datatables' , 'as' => 'Materials_History_Datatables']);
 
 route::get('/Materials/Category/Datatables', ['uses'=>'MaterialsCategory@MaterialsCategoryDatatables' , 'as' => 'MaterialsCategoryDatatables']);
@@ -166,7 +174,7 @@ route::resource('/Roles' , 'RolesController');
 route::resource('/Gender' , 'GenderController');
 route::resource('/Course' , 'CourseController');
 route::resource('/Permissions', 'PermissionController');
-route::resource('/Material', 'MaterialController');
+route::resource('/Material', 'MaterialController')->only(['index', 'store', 'show']);
 route::resource('/MaterialsCategory', 'MaterialsCategory');
 route::resource('/MaterialsSubject', 'MaterialsSubject');
 route::resource('/Issuing', 'IssuingController');

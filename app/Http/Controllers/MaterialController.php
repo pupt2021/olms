@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Yajra\DataTables\Facades\DataTables;
 
+use App\Models\Material;
+use App\Models\MaterialCopy;
+
 class MaterialController extends Controller
 {
     /**
@@ -33,7 +36,6 @@ class MaterialController extends Controller
 
     public function index()
     {
-        //
         if (auth::check() == true) {
             $user_permission = db::table('user_links as a')
                 ->join('user_permission as b', 'a.id', '=', 'b.link_id')
@@ -60,15 +62,6 @@ class MaterialController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -78,58 +71,47 @@ class MaterialController extends Controller
      */
     public function store(Request $request)
     {
-        //
         extract($request->all());
 
-        $data_updated = [
-            'isbn' => $isbn,
-            'title' => $title,
-            'callno' => $callno,
-            'author' => $author,
-            'publisher' => $publisher,
-            'edition' => $edition,
-            'date_received' => $daterec,
-            'copyright' => $copyright,
-            'copies' => $copies,
-            'type' => $type,
-            'update_at' => Carbon::now()
-        ];
+        // If ID is not empty...
+        if ($id !== '') {
 
-        if ($id != '') {
-
-            db::table('materials')
-                ->where('materials_id', $id)
-                ->update($data_updated);
-
-            return response()->json(['status' => 'success', 'message' => "Materials Category Data is successfully updated"]);
-
-        } else {
-
-            $material_category = db::table('materials_category')
-                ->where('id', $structure)
-                ->get();
-
-            foreach ($material_category as $category) {
-                $category_name = $category->cat_structure;
-            }
-
-            $materials = db::table('materials')
-                ->get()
-                ->count();
-
-            $category_name = $category_name . '-' . ($materials + 1);
-
-            $data_inserted = [
-                'category_id' => $structure,
-                'accnum' => $category_name,
+            $data_updated = [
                 'isbn' => $isbn,
                 'title' => $title,
                 'callno' => $callno,
                 'author' => $author,
                 'publisher' => $publisher,
                 'edition' => $edition,
-                'copies' => $copies,
-                'date_received' => $daterec,
+                'copyright' => $copyright,
+                'type' => $type,
+                'updated_at' => Carbon::now()
+            ];
+            // Update the Material
+            db::table('materials')
+                ->where('materials_id', $id)
+                ->update($data_updated);
+
+            return response()->json(['status' => 'success', 'message' => "Materials Category Data is successfully updated"]);
+
+        } 
+
+        // If ID is empty
+        else 
+        {
+            // Create new Material
+            $material_category = db::table('materials_category')
+                ->where('id', $structure)
+                ->first();
+
+            $data_inserted = [
+                'category_id' => $structure,
+                'isbn' => $isbn,
+                'title' => $title,
+                'callno' => $callno,
+                'author' => $author,
+                'publisher' => $publisher,
+                'edition' => $edition,
                 'copyright' => $copyright,
                 'type' => $type,
                 'created_at' => Carbon::now()
@@ -138,6 +120,7 @@ class MaterialController extends Controller
             $id = db::table('materials')
                 ->insertGetId($data_inserted);
 
+            // Insert Subject IDs into a Pivot Table
             for ($i = 0; $i < count($subject); $i++) {
                 db::table('materials_subject_link')
                     ->insert([
@@ -154,11 +137,35 @@ class MaterialController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function show($id)
     {
-        //
+        $material = Material::where('materials_id', base64_decode($id))
+            ->firstorFail();
+            
+        $materialCopies = MaterialCopy::where('materials_id', base64_decode($id))
+            ->orderBy('date_recieved', 'DESC')
+            ->get();
+
+        $user_permission = db::table('user_links as a')
+            ->join('user_permission as b', 'a.id', '=', 'b.link_id')
+            ->where('b.user_id', auth::user()->id)
+            ->where('b.status', '=', 'On')
+            ->where('a.slug_name', 'LIKE', '%' . $this->controller . '%')
+            ->where('b.link_id', '!=', 0)
+            ->get();
+
+        return view('Materials.show', compact('material', 'materialCopies', 'user_permission'));
+    }
+
+
+    public function showEditValues(Request $request, $id)
+    {
+        // Block GET requests
+        if (! $request->isMethod('post')) 
+            abort(404);
+        
         $data = db::table('materials')
             ->where('materials_id', $id)
             ->get();
@@ -166,49 +173,11 @@ class MaterialController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function MaterialsDatatables()
     {
-
         $data = DB::table('materials')
             ->select('*', DB::raw('(CASE WHEN type = 1 THEN "Borrowing" WHEN type = 2 THEN "Room Use" END) AS material_type'))
             ->where('status', 1);
-
-        $materials_copies = db::table('materials_copies')
-            ->get();
 
         $data2 = DB::table('materials_subject_link as a')
             ->join('materials as b', 'a.mat_id', '=', 'b.materials_id')
@@ -223,91 +192,56 @@ class MaterialController extends Controller
             ->where('b.link_id', '!=', 0)
             ->get();
 
-        if ($user_permission->contains('slug_name', 'Material.show') && $user_permission->contains('slug_name', 'MaterialsDelete')) {
-            return DataTables::query($data)
-                ->addColumn('action', function ($row) {
-                    $btn = '<td></tr><div class="btn-group-horizontally">
-                                <a type="button" title="HISTORY" href="Material/History/' . base64_encode($row->materials_id) . '" class="btn btn-info" style="background-color: green"><span class="fa fa-history"></span></a>
-                                <a type="button" title="EDIT" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->materials_id . ' ><span class="fa fa-edit"></span></a>
-                                <a type="button" title="DELETE" class="btn btn-warning data-delete" id="data-delete" data-id=' . $row->materials_id . ' ><span class="fa fa-trash"></span></a>
-                            </div></td>';
-                    return $btn;
+        return DataTables::query($data)
+            // Copies Column
+            ->addColumn('copies', function ($row){
+                    $materials_copies_count = db::table('materials_copies')
+                        ->where('materials_id', $row->materials_id)
+                        ->count();
+                    
+                    return $materials_copies_count;
                 })
-                ->addColumn('copies', function ($row) use ($materials_copies) {
-                    $copies = $row->copies;
-                    foreach ($materials_copies as $qty) {
-                        if ($row->materials_id == $qty->materials_id) {
-                            if ($qty->status == 1) {
-                                $copies = $row->copies - $qty->quantity;
-                            }
-                        }
-                    }
-                    return $copies;
-                })
-                ->rawColumns(['action', 'copies'])
-                ->toJson();
-        } elseif ($user_permission->contains('slug_name', 'Material.show')) {
-            return DataTables::query($data)
-                ->addColumn('action', function ($row) {
-                    $btn = '<td></d></tr><div class="btn-group-horizontally">
-                                <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->materials_id . ' ><span class="fa fa-edit">&nbsp;&nbsp;</span>Edit</a>
-                            </div></td>';
-                    return $btn;
-                })
-                ->addColumn('copies', function ($row) use ($materials_copies) {
-                    $copies = $row->copies;
-                    foreach ($materials_copies as $qty) {
-                        if ($row->materials_id == $qty->materials_id) {
-                            if ($qty->status == 1) {
-                                $copies = $row->copies - $qty->quantity;
-                            }
-                        }
-                    }
-                    return $copies;
-                })
-                ->rawColumns(['action', 'copies'])
-                ->toJson();
-        } elseif ($user_permission->contains('slug_name', 'MaterialsDelete')) {
-            return DataTables::query($data)
-                ->addColumn('action', function ($row) {
-                    $btn = '<td></d></tr><div class="btn-group-horizontally">
-                                <a type="button" class="btn btn-warning data-delete" id="data-delete" data-id=' . $row->materials_id . ' ><span class="fa fa-trash">&nbsp;&nbsp;</span>Delete</a>
-                            </div></td>';
-                    return $btn;
-                })
-                ->addColumn('copies', function ($row) use ($materials_copies) {
-                    $copies = $row->copies;
-                    foreach ($materials_copies as $qty) {
-                        if ($row->materials_id == $qty->materials_id) {
-                            if ($qty->status == 1) {
-                                $copies = $row->copies - $qty->quantity;
-                            }
-                        }
-                    }
-                    return $copies;
-                })
-                ->rawColumns(['action', 'copies'])
-                ->toJson();
-        } else {
-            return DataTables::query($data)
-                ->addColumn('action', function ($row) {
-                    $btn = '';
-                    return $btn;
-                })
-                ->addColumn('copies', function ($row) use ($materials_copies) {
-                    $copies = $row->copies;
-                    foreach ($materials_copies as $qty) {
-                        if ($row->materials_id == $qty->materials_id) {
-                            if ($qty->status == 1) {
-                                $copies = $row->copies - $qty->quantity;
-                            }
-                        }
-                    }
-                    return $copies;
-                })
-                ->rawColumns(['action', 'copies'])
-                ->toJson();
-        }
+
+            // Action Buttons Column
+            ->addColumn('action', function ($row) use ($user_permission){
+
+                // Add Button for Material History
+                $btn = '
+                        <td>
+                            <div class="btn-group-horizontally">
+                                <a type="button" title="VIEW" href="Material/' . base64_encode($row->materials_id) . '" class="btn btn-primary">
+                                    <span class="fas fa-external-link-alt"></span>
+                                </a>
+                                <a type="button" title="HISTORY" href="Material/History/' . base64_encode($row->materials_id) . '" class="btn btn-info" style="background-color: green">
+                                    <span class="fa fa-history"></span>
+                                </a>';
+
+                // Add Button for Material Show/Edit if User has Material.show Permission
+                if ($user_permission->contains('slug_name', 'Material.show'))
+                {
+                    $btn .= '
+                                <a type="button" title="EDIT" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->materials_id . '>
+                                    <span class="fa fa-edit"></span>
+                                </a>';
+                }
+
+                // Add Button for Material Delete if User has MaterialsDelete Permission
+                if ($user_permission->contains('slug_name', 'MaterialsDelete'))
+                {
+                    $btn .= '
+                                <a type="button" title="DELETE" class="btn btn-warning data-delete" id="data-delete" data-id=' . $row->materials_id . '>
+                                    <span class="fa fa-trash"></span>
+                                </a>';
+                }
+
+                $btn .= '
+                            </div>
+                        </td>';
+                            
+                return $btn;
+            })
+            ->rawColumns(['action', 'copies'])
+            ->toJson();
     }
 
     public function MaterialsDelete(Request $request)
@@ -357,4 +291,94 @@ class MaterialController extends Controller
             ->rawColumns(['user_no'])
             ->toJson();
     }
+
+    public function MaterialCopyStore(Request $request, $id)
+    {
+        // Get Material Information
+        $material = Material::where('materials_id', base64_decode($id))
+            ->firstorFail();
+
+        $material_category_structure = db::table('materials_category')
+            ->where('id', $material->category_id)
+            ->value('cat_structure');
+
+        // Get Latest Accession Number Digit, for more info go to Models/MaterialCopy/getDigitinAccessionNumberAttribute
+        $materialsWithSameAccessionNumber = MaterialCopy::where('accession_number', 'LIKE', $material_category_structure . '%')
+            ->get();
+
+        $latestMaterialCopyAccessionNumber = $materialsWithSameAccessionNumber->sortByDesc('digit_in_accession_number')
+            ->first();
+            
+        // Add one to the latest digit
+        $currentDigit = $latestMaterialCopyAccessionNumber->digit_in_accession_number + 1;
+        
+        // Loop for the number of copies inputted
+        for ($i=0; $i < $request->input('copies'); $i++) 
+        { 
+            // Ensure that the accession number formed is unique, else add 1 then check again
+            while (MaterialCopy::where('accession_number', $material_category_structure . '-' . $currentDigit)->exists()) 
+                $currentDigit += 1;
+
+            // If accession number is unique, create Material Copy Entry
+           MaterialCopy::create([
+                'materials_id' => $material->materials_id,
+                'borrows_id' => NULL,
+                'accession_number' => $material_category_structure . '-' . $currentDigit,
+                'date_recieved' => Carbon::now(),
+           ]);
+        }
+        return response()->json(['status' => 'success', 'message' => "Material Copies Data is successfully inserted"]);
+    }
+
+    public function MaterialCopyShowEditValues($id, $copy_id)
+    {}
+
+
+
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
 }
+    
