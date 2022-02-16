@@ -140,10 +140,20 @@ class DTRController extends Controller
 
     public function search_book(){
         $data = DB::table('materials')
-            ->select('*',  DB::raw('(CASE WHEN type = 1 THEN "Borrow" WHEN type = 2 THEN "Room Use" END) AS type'), DB::raw('(CASE WHEN is_available = 0 THEN "NOT AVAILABLE" WHEN is_available = 1 THEN "AVAILABLE" WHEN is_available = 2 THEN "RESERVED" END) AS is_available'))
+            ->select('*',  DB::raw('(CASE WHEN type = 1 THEN "Borrow" WHEN type = 2 THEN "Room Use" END) AS type'), )
             ->where('status', 1);
-
+        //DB::raw('(CASE WHEN is_available = 0 THEN "NOT AVAILABLE" WHEN is_available = 1 THEN "AVAILABLE" WHEN is_available = 2 THEN "RESERVED" END) AS is_available')
         return DataTables::query($data)
+            // Copies Column
+            ->addColumn('available_copies', function ($row){
+                    $materials_copies_count = db::table('materials_copies')
+                        ->where('materials_id', $row->materials_id)
+                        ->where('is_available', 1)
+                        ->count();
+                    
+                    return $materials_copies_count;
+                })
+            ->rawColumns(['available_copies'])
             ->toJson();
     }
 

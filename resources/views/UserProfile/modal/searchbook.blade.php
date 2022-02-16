@@ -13,7 +13,6 @@
                             <thead class="text-center">
                             <tr>
                                 <th class="text-center">ID NO</th>
-                                <th class="text-center">ACC NUM</th>
                                 <th class="text-center">ISBN</th>
                                 <th class="text-center">TITLE</th>
                                 <th class="text-center">TYPE</th>
