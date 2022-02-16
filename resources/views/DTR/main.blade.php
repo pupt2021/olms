@@ -204,6 +204,7 @@ hr {
                 }
             });
 
+            // DTR SIDE - SEARCH BOOK DATATABLE
             var table = $('#search_book').DataTable({
                 processing: true,
                 serverSide: true,
@@ -215,12 +216,11 @@ hr {
                 },
                 columns: [
                     {data: 'materials_id', name: 'materials_id'},
-                    {data: 'accnum', name: 'accnum'},
                     {data: 'isbn', name: 'isbn'},
                     {data: 'title', name: 'title'},
                     {data: 'callno', name: 'callno'},
                     {data: 'type', name: 'type'},
-                    {data: 'is_available', name: 'is_available'}
+                    {data: 'available_copies', name: 'available_copies'}
                 ],
                 responsive: true,  "autoWidth": false,
                 buttons: ["csv", "excel", "pdf", "print"]

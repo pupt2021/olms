@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Book Searching</h4>
+                <h4 class="modal-title">Book SearchingXXX</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -13,12 +13,11 @@
                             <thead class="text-center">
                             <tr>
                                 <th class="text-center">ID NO</th>
-                                <th class="text-center">ACC NUM</th>
                                 <th class="text-center">ISBN</th>
                                 <th class="text-center">TITLE</th>
                                 <th class="text-center">CALL No.</th>
                                 <th class="text-center">TYPE</th>
-                                <th class="text-center">STATUS</th>
+                                <th class="text-center">AVAILABLE COPIES</th>
                             </tr>
                             </thead>
                             <tbody class="text-center">
