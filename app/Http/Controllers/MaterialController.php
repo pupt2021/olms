@@ -292,6 +292,12 @@ class MaterialController extends Controller
             ->toJson();
     }
 
+    /**
+     * Function to Store a number of Material Copies
+     * Route: POST
+     * @param Request $request, Integer $id
+     * @return JSON Response
+     */ 
     public function MaterialCopyStore(Request $request, $id)
     {
         // Get Material Information
@@ -330,12 +336,40 @@ class MaterialController extends Controller
         return response()->json(['status' => 'success', 'message' => "Material Copies Data is successfully inserted"]);
     }
 
+    /**
+     * Function to Show Values of a Material Copy in a modal
+     * Route: POST
+     * @param Integer $id, Integer $copy_id
+     * @return JSON Response
+     */ 
     public function MaterialCopyShowEditValues($id, $copy_id)
-    {}
+    {
+        // Get Material Copy Information and return JSON
+        $materialCopy = MaterialCopy::where('materials_id', $id)
+            ->where('material_copy_id', $copy_id)
+            ->select('material_copy_id', 'date_recieved', 'accession_number')
+            ->get();
 
+        return response()->json($materialCopy);
+    }
 
+    /**
+     * Function to Update a Material Copy
+     * Route: POST
+     * @param Request $request, Integer $id, Integer $copy_id
+     * @return JSON Response
+     */ 
+    public function MaterialCopyUpdate(Request $request, $id, $copy_id)
+    {
+        // Get Material Copy and update
+        MaterialCopy::where('materials_id', $id)
+            ->where('material_copy_id', $copy_id)
+            ->update([
+            'date_recieved' => $request->input('date_recieved'),
+        ]);
 
-
+        return response()->json(['status' => 'success', 'message' => "Material Copy Data is successfully updated"]);
+    }
 
     /**
      * Show the form for creating a new resource.

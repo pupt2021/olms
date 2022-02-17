@@ -87,6 +87,7 @@ route::get('/Permissions/Datatables', ['uses'=>'PermissionController@PermissionD
 // Material Copies Routes
 route::post('/Material/{id}/Copies/Store', ['uses'=>'MaterialController@MaterialCopyStore' , 'as' => 'Material.MaterialCopy.store']);
 route::post('/Material/{id}/Copies/{copy_id}/ShowEditValues', ['uses'=>'MaterialController@MaterialCopyShowEditValues' , 'as' => 'Material.MaterialCopy.ShowEditValues']);
+route::post('/Material/{id}/Copies/{copy_id}/Update', ['uses'=>'MaterialController@MaterialCopyUpdate' , 'as' => 'Material.MaterialCopy.update']);
 
 route::get('/Material/Datatables', ['uses'=>'MaterialController@MaterialsDatatables' , 'as' => 'MaterialsDatatables']);
 route::post('/Material/Delete', ['uses' => 'MaterialController@MaterialsDelete' , 'as' => 'MaterialsDelete']);

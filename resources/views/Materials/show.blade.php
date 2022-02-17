@@ -27,10 +27,39 @@
                     <div class="card">
                         <div class="card-body table-responsive">
                             {{-- Title and ISBN --}}
-                            <div class="row text-center my-1">
-                                <div class="col">
-                                    <h4 class="fw-bold">{{$material->title}}</h4>
-                                    <p>{{$material->isbn}}</p>
+                            <div class="row my-1">
+                                <div class="col text-left">
+                                    <h1 class="display-5 fw-bold">{{$material->title}}</h4>
+                                    <p><b>{{$material->isbn ?? 'NO ISBN PROVIDED'}}</b></p>
+                                </div>
+                                <div class="col text-center d-flex justify-content-end">
+                                    <div class="mr-1">
+                                        <a type="button" title="ADD COPIES" data-id="{{$material->materials_id}}" class="btn btn-primary material-add-copy" id="material-add-copy">
+                                            <span class="fa fa-plus"></span>
+                                        </a>
+                                    </div>
+
+                                    <div class="mr-1">
+                                        <a type="button" title="HISTORY" href="{{ route('Materials_History', ['id' => base64_encode($material->materials_id)]) }}" class="btn btn-info" style="background-color: green">
+                                            <span class="fa fa-history"></span>
+                                        </a>
+                                    </div>
+
+                                    @if ($user_permission->contains('slug_name', 'Material.show'))
+                                        <div class="mr-1">
+                                            <a type="button" title="EDIT" class="btn btn-info data-edit" id="data-edit" data-id="{{$material->materials_id}}">
+                                                <span class="fa fa-edit"></span>
+                                            </a>
+                                        </div>
+                                    @endif
+
+                                    @if ($user_permission->contains('slug_name', 'MaterialsDelete'))
+                                        <div>
+                                            <a type="button" title="DELETE" class="btn btn-warning data-delete" id="data-delete" data-id="{{$material->materials_id}}">
+                                                <span class="fa fa-trash"></span>
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 
@@ -39,55 +68,33 @@
 
                                 {{-- Column 1 --}}
                                 <div class="col">
-                                    <p>Author: {{$material->author ?? 'NONE PROVIDED'}}</p>
-                                    <p>Publisher: {{$material->publisher ?? 'NONE PROVIDED'}}</p>
-                                    <p>Edition: {{$material->edition ?? 'NONE PROVIDED'}}</p>
-                                    <p>Copyright: {{$material->copyright ?? 'NONE PROVIDED'}}</p>
+                                    <p><b>Author</b>: {{$material->author ?? 'NONE PROVIDED'}}</p>
+                                    <p><b>Publisher</b>: {{$material->publisher ?? 'NONE PROVIDED'}}</p>
+                                    <p><b>Edition</b>: {{$material->edition ?? 'NONE PROVIDED'}}</p>
+                                    <p><b>Copyright</b>: {{$material->copyright ?? 'NONE PROVIDED'}}</p>
                                 </div>
 
                                 {{-- Column 2 --}}
                                 <div class="col">
-                                    <p>Call No.: {{$material->callno ?? 'NONE PROVIDED'}}</p>
-                                    <p>Type: 
+                                    <p><b>Call No.</b>: {{$material->callno ?? 'NONE PROVIDED'}}</p>
+                                    <p><b>Type</b>: 
                                         @if($material->type === 1)
                                             {{ 'Borrowing' }}
                                         @elseif($material->type === 2)
                                             {{ 'Room Use' }}
                                         @endif
                                     </p>
-                                    <p>Total Copies: 
+                                    <p><b>Total Copies</b>: 
                                         @if($materialCopies->isNotEmpty())
                                             {{$materialCopies->count()}}
                                         @else
                                             NONE
                                         @endif
                                     </p>
-
-                                    {{-- Action Buttons --}}
-                                    <p>Actions: 
-                                        <a type="button" title="ADD COPIES" data-id="{{$material->materials_id}}" class="btn btn-primary material-add-copy-edit" id="material-add-copy-edit">
-                                            <span class="fa fa-plus"></span>
-                                        </a>
-
-                                        <a type="button" title="HISTORY" href="{{ route('Materials_History', ['id' => base64_encode($material->materials_id)]) }}" class="btn btn-info" style="background-color: green">
-                                            <span class="fa fa-history"></span>
-                                        </a>
-
-                                        @if ($user_permission->contains('slug_name', 'Material.show'))
-                                            <a type="button" title="EDIT" class="btn btn-info data-edit" id="data-edit" data-id="{{$material->materials_id}}">
-                                                <span class="fa fa-edit"></span>
-                                            </a>
-                                        @endif
-
-                                        @if ($user_permission->contains('slug_name', 'MaterialsDelete'))
-                                            <a type="button" title="DELETE" class="btn btn-warning data-delete" id="data-delete" data-id="{{$material->materials_id}}">
-                                                <span class="fa fa-trash"></span>
-                                            </a>
-                                        @endif
-                                    </p>
                                 </div>
                             </div>
 
+                            {{-- Material Copies Table --}}
                             <table class="table table-bordered table-striped my-2">
                                 <thead class="text-center">
                                 <tr>
@@ -124,7 +131,12 @@
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="5">NO COPIES FOUND. ADD ONE HERE</td>
+                                            <td colspan="5">
+                                                <p>NO COPIES FOUND.
+                                                    <a title="ADD COPIES" data-id="{{$material->materials_id}}" class="material-add-copy" id="material-add-copy">ADD ONE HERE
+                                                    </a>
+                                                </p>
+                                            </td>
                                         </tr>
                                     @endif
                                 </tbody>
@@ -214,10 +226,8 @@
                                 <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
                         </form>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
             </div>
 
         {{-- MATERIAL ADD COPY FORM MODAL --}}
@@ -237,6 +247,44 @@
                                     <div class="form-group col-md-6">
                                         <label for="">Number of Copies: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
                                         <input type="number" class="form-control" name="copies" id="copies" placeholder="Enter Number of Copies" min="1" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+
+        {{-- MATERIAL EDIT COPY FORM MODAL --}}
+            <div class="materialEditCopyModal modal" id="materialEditCopyModal">
+                <div class="modal-dialog modal-xl" >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Edit Material Copy</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="materialEditCopyForm">
+                            <div class="modal-body">
+                                {{ csrf_field() }}
+                                <input type="hidden" class="form-control" id="copy_id" name="copy_id">
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="">Accession Number: </label>
+                                        <input type="text" class="form-control" id="accession_number" readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="">Date Recieved: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <input type="date" class="form-control" name="date_recieved" id="date_recieved" required>
                                     </div>
                                 </div>
                             </div>
@@ -375,120 +423,6 @@
                 });
             });
 
-            // MATERIAL COPY
-
-            $(document).on('click', '.material-copy-edit', function(){
-                $('#materialCopyModal').modal('show');
-                var copy_id = $(this).attr("data-id");
-                var url = "{{ route('Material.MaterialCopy.ShowEditValues', ['id' => $material->materials_id, 'copy_id' => ':id']) }}";
-                url = url.replace(':id', copy_id);
-                $.ajax({
-                    type:"POST",
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    url: url,
-                    // get all form field value in serialize form
-                    success: function(response){
-                        /*swal.fire("Sorry this function currently not working");*/
-                        if(response[0]){
-                            $('#accession_number').val(response[0].accession_number);
-                            $('#date_recieved').val(response[0].date_recieved);
-                        }else{
-                            swal.fire("Something is error please contact developer", "","error");
-                        }
-                    }
-                });
-            });
-
-            $('#materialCopyForm').validate({
-                rules: {
-                    date_recieved: {
-                        required: true,
-                    },
-                },
-                errorElement: 'span',
-                errorPlacement: function (error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.form-group').append(error);
-                },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
-                },
-                submitHandler: function(form) {
-                    jQuery.ajax({
-                        url:'{{ route('Material.MaterialCopy.store', ['id' => $material->materials_id]) }}',
-                        type: "post",
-                        data: {
-                            '_token': $('input[name=_token]').val(),
-                            'copy_id' : $('#copy_id').val(),
-                        },
-                        data: $('#materialCopyForm').serialize(),
-                        success: function(response){
-                            if(response.status == "success"){
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: response.message
-                                }).then((result) => {
-                                    location.reload();
-                                });
-                            }else{
-
-                            }
-                        }
-                    });
-                }
-            });
-
-            $(document).on('click', '.material-add-copy-edit', function(){
-                $('#materialAddCopyModal').modal('show');
-            });
-
-            $('#materialAddCopyForm').validate({
-                rules: {
-                    copies: {
-                        required: true,
-                    },
-                },
-                errorElement: 'span',
-                errorPlacement: function (error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.form-group').append(error);
-                },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
-                },
-                submitHandler: function(form) {
-                    jQuery.ajax({
-                        url:'{{ route('Material.MaterialCopy.store', ['id' => base64_encode($material->materials_id)]) }}',
-                        type: "post",
-                        data: {
-                            '_token': $('input[name=_token]').val(),
-                            'copies' : $('#copies').val(),
-                        },
-                        data: $('#materialAddCopyForm').serialize(),
-                        success: function(response){
-                            if(response.status == "success"){
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: response.message
-                                }).then((result) => {
-                                    location.reload();
-                                });
-                            }else{
-
-                            }
-                        }
-                    });
-                }
-            });
-
             $(document).on('click' , '.data-delete' , function(){
                 var id = $(this).attr("data-id");
                 Swal.fire({
@@ -534,6 +468,131 @@
                 })
             });
 
+            // MATERIAL COPY
+
+            $(document).on('click', '.material-copy-edit', function(){
+                $('#materialEditCopyModal').modal('show');
+                var copy_id = $(this).attr("data-id");
+                var url = "{{ route('Material.MaterialCopy.ShowEditValues', ['id' => $material->materials_id, 'copy_id' => ':id']) }}";
+                url = url.replace(':id', copy_id);
+                $.ajax({
+                    type:"POST",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    url: url,
+                    // get all form field value in serialize form
+                    success: function(response){
+                        /*swal.fire("Sorry this function currently not working");*/
+                        if(response[0]){
+                            $('#accession_number').val(response[0].accession_number);
+                            $('#date_recieved').val(response[0].date_recieved);
+                            $('#copy_id').val(response[0].material_copy_id);
+                        }else{
+                            swal.fire("Something is error please contact developer", "","error");
+                        }
+                    }
+                });
+            });
+
+            $(document).on('click', '.material-add-copy', function(){
+                $('#materialAddCopyModal').modal('show');
+            });
+
+            $('#materialEditCopyForm').validate({
+                rules: {
+                    date_recieved: {
+                        required: true,
+                    },
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                },
+                submitHandler: function(form) {
+                    var copy_id = $('#copy_id').val();
+                    var url = "{{ route('Material.MaterialCopy.update', ['id' => $material->materials_id, 'copy_id' => ':id']) }}";
+                    url = url.replace(':id', copy_id);
+                    jQuery.ajax({
+                        url: url,
+                        type: "post",
+                        data: {
+                            '_token': $('input[name=_token]').val(),
+                            'copy_id' : $('#copy_id').val(),
+                            'date_recieved': $('#date_recieved').val(),
+                        },
+                        data: $('#materialEditCopyForm').serialize(),
+                        success: function(response){
+                            if(response.status == "success"){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.message
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            }else{
+
+                            }
+                        }
+                    });
+                }
+            });
+
+
+            $('#materialAddCopyForm').validate({
+                rules: {
+                    copies: {
+                        required: true,
+                    },
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                },
+                submitHandler: function(form) {
+                    jQuery.ajax({
+                        url:'{{ route('Material.MaterialCopy.store', ['id' => base64_encode($material->materials_id)]) }}',
+                        type: "post",
+                        data: {
+                            '_token': $('input[name=_token]').val(),
+                            'copies' : $('#copies').val(),
+                        },
+                        data: $('#materialAddCopyForm').serialize(),
+                        success: function(response){
+                            if(response.status == "success"){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.message
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            }else{
+
+                            }
+                        }
+                    });
+                }
+            });
+
+            // GET COPY ID FROM DATA-ID ATTRIBUTE
+            function getCopyIDFromDataIDAttribute()
+            {
+                return $('#copy_id').val();
+            }
         })
     </script>
 @endsection
