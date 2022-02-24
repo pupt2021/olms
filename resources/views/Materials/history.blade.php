@@ -60,15 +60,16 @@
 @section('scripts')
     <script>
         $(document).ready(function(){
-
             var table = $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 bjQueryUI: true,
                 ajax : {
                     url : "{{ route('Materials_History_Datatables', ['id' => $id]) }}",
-                    type : "GET",
-                    dataType: 'JSON'
+                    type : "POST",
+                    dataType: 'JSON',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 },
                 columns: [
                     {data: 'user_no', name: 'user_no'},

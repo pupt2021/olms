@@ -47,7 +47,11 @@ class ArchivesController extends Controller
         }
     }
 
-    public function materials_list_datatables(){
+    public function materials_list_datatables(Request $request){
+        // Block requests other than POST
+        if (! $request->isMethod('post')) 
+            abort(404);
+
         $data = DB::table('materials')
             ->select('*',  DB::raw('(CASE WHEN type = 1 THEN "Borrowing" WHEN type = 2 THEN "Room Use" END) AS material_type'))
             ->where('status', 0);

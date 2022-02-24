@@ -146,9 +146,11 @@
                     </div><!-- /.card -->
                 </div><!-- /.col -->
             </div><!-- /.row -->
-        </div>
+        
 
-        {{-- MATERIALS FORM MODAL --}}
+            {{-- MODALS --}}
+
+            {{-- MATERIALS FORM MODAL --}}
             <div class="modal" id="modal">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
@@ -158,7 +160,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form id="form">
+                        <form id="materialForm">
                             <div class="modal-body">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="id" id="id">
@@ -228,9 +230,9 @@
                         </form>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
-            </div>
+            </div><!-- /.modal -->
 
-        {{-- MATERIAL ADD COPY FORM MODAL --}}
+            {{-- MATERIAL ADD COPY FORM MODAL --}}
             <div class="materialAddCopyModal modal" id="materialAddCopyModal">
                 <div class="modal-dialog modal-xl" >
                     <div class="modal-content">
@@ -255,13 +257,11 @@
                                 <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
                         </form>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
 
-        {{-- MATERIAL EDIT COPY FORM MODAL --}}
+            {{-- MATERIAL EDIT COPY FORM MODAL --}}
             <div class="materialEditCopyModal modal" id="materialEditCopyModal">
                 <div class="modal-dialog modal-xl" >
                     <div class="modal-content">
@@ -293,13 +293,11 @@
                                 <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
                         </form>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
 
-        <!-- /.container-fluid -->
+        </div><!-- /.container-fluid -->
     </section>
 @endsection
 
@@ -327,8 +325,8 @@
                 $('.add_mask').addClass("col-md-6").removeClass("col-md-12");
             });
 
-            // MATERIAL 
-            $('#form').validate({
+            // MATERIAL
+            $('#materialForm').validate({
                 rules: {
                     structure: {
                         required: true,
@@ -587,12 +585,6 @@
                     });
                 }
             });
-
-            // GET COPY ID FROM DATA-ID ATTRIBUTE
-            function getCopyIDFromDataIDAttribute()
-            {
-                return $('#copy_id').val();
-            }
         })
     </script>
 @endsection

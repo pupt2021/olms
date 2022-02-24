@@ -25,47 +25,42 @@ class MaterialController extends Controller
 
     public function __construct(array $attributes = array())
     {
+        // Sets the value for protected variables
         /* if controller is not compatible with slug name */
         $routeArray = app('request')->route()->getAction();
         $controllerAction = class_basename($routeArray['controller']);
         list($this->controller, $action) = explode('Controller@', $controllerAction);
 
         $this->routeName = Route::currentRouteName();
-
     }
 
+    /**
+     * Function to Show the Index Page of Materials
+     * Route: GET
+     * @return View
+     */ 
     public function index()
     {
-        if (auth::check() == true) {
-            $user_permission = db::table('user_links as a')
-                ->join('user_permission as b', 'a.id', '=', 'b.link_id')
-                ->where('b.user_id', auth::user()->id)
-                ->where('b.status', '=', 'On')
-                ->Where('a.slug_name', 'LIKE', '%' . $this->controller . '%')
-                ->Where('link_id', '!=', 0)
-                ->get();
-
-
-            $material_category = db::table('materials_category')->where('status', 1)->get();
-            $material_subject = db::table('materials_subject')->where('status', 1)->get();
-
-            if ($user_permission->contains('slug_name', $this->routeName)) {
-                return view('Materials.list')
-                    ->with('user_perm', $user_permission)
-                    ->with('category', $material_category)
-                    ->with('subject', $material_subject);
-            } else {
-                return redirect()->route('Dashboard');
-            }
-        } else {
+        // If User is not logged in, redirect to login page
+        if (! auth::check())
             return redirect()->route('user_login_page');
-        }
-    }
+        // If user doesnt have the permissions, redirect to dashboard
+        $user_permission = $this->getUserPermissions();
+        if (! $user_permission->contains('slug_name', $this->routeName))
+            return redirect()->route('Dashboard');
 
+        $material_category = db::table('materials_category')->where('status', 1)->get();
+        $material_subject = db::table('materials_subject')->where('status', 1)->get();
+
+        return view('Materials.list')
+            ->with('user_perm', $user_permission)
+            ->with('category', $material_category)
+            ->with('subject', $material_subject);
+    }
 
     /**
      * Store a newly created resource in storage.
-     *
+     * Route: POST
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
@@ -75,7 +70,6 @@ class MaterialController extends Controller
 
         // If ID is not empty...
         if ($id !== '') {
-
             $data_updated = [
                 'isbn' => $isbn,
                 'title' => $title,
@@ -93,7 +87,6 @@ class MaterialController extends Controller
                 ->update($data_updated);
 
             return response()->json(['status' => 'success', 'message' => "Materials Category Data is successfully updated"]);
-
         } 
 
         // If ID is empty
@@ -135,7 +128,7 @@ class MaterialController extends Controller
 
     /**
      * Display the specified resource.
-     *
+     * Route: GET
      * @param int $id
      * @return View
      */
@@ -148,21 +141,20 @@ class MaterialController extends Controller
             ->orderBy('date_recieved', 'DESC')
             ->get();
 
-        $user_permission = db::table('user_links as a')
-            ->join('user_permission as b', 'a.id', '=', 'b.link_id')
-            ->where('b.user_id', auth::user()->id)
-            ->where('b.status', '=', 'On')
-            ->where('a.slug_name', 'LIKE', '%' . $this->controller . '%')
-            ->where('b.link_id', '!=', 0)
-            ->get();
+        $user_permission = $this->getUserPermissions();
 
         return view('Materials.show', compact('material', 'materialCopies', 'user_permission'));
     }
 
-
+    /**
+     * Function to return edit values for a Material
+     * Route: POST
+     * @param Request $request, Integer $id
+     * @return JSON Response
+     */ 
     public function showEditValues(Request $request, $id)
     {
-        // Block GET requests
+        // Block requests other than POST
         if (! $request->isMethod('post')) 
             abort(404);
         
@@ -173,6 +165,11 @@ class MaterialController extends Controller
         return response()->json($data);
     }
 
+    /**
+     * Function to supply data to Material Table in Index Page
+     * Route: POST
+     * @return JSON Response
+     */ 
     public function MaterialsDatatables()
     {
         $data = DB::table('materials')
@@ -183,14 +180,7 @@ class MaterialController extends Controller
             ->join('materials as b', 'a.mat_id', '=', 'b.materials_id')
             ->join('materials_subject as c', 'a.sub_id', '=', 'c.id');
 
-
-        $user_permission = db::table('user_links as a')
-            ->join('user_permission as b', 'a.id', '=', 'b.link_id')
-            ->where('b.user_id', auth::user()->id)
-            ->where('b.status', '=', 'On')
-            ->where('a.slug_name', 'LIKE', '%' . $this->controller . '%')
-            ->where('b.link_id', '!=', 0)
-            ->get();
+        $user_permission = $this->getUserPermissions();
 
         return DataTables::query($data)
             // Copies Column
@@ -244,6 +234,12 @@ class MaterialController extends Controller
             ->toJson();
     }
 
+    /**
+     * Function to mark a Material as Deleted in DB
+     * Route: POST
+     * @param Request $request
+     * @return JSON Response
+     */ 
     public function MaterialsDelete(Request $request)
     {
         DB::table('materials')
@@ -268,7 +264,11 @@ class MaterialController extends Controller
         }
     }
 
-    public function Materials_History_Datatables($id){
+    public function Materials_History_Datatables(Request $request, $id){
+        // Block requests other than POST
+        if (! $request->isMethod('post')) 
+            abort(404);
+
         $data = DB::table('materials')
             ->select('materials.*', 'user_details.*', db::raw("CONCAT(lastname,',',firstname) as fullname"), DB::raw('(CASE WHEN materials.type = 1 THEN "Borrowing" WHEN materials.type = 2 THEN "Room Use" END) AS material_type'))
             ->join('borrowings', 'materials.materials_id', '=', 'borrowings.materials_id')
@@ -369,6 +369,23 @@ class MaterialController extends Controller
         ]);
 
         return response()->json(['status' => 'success', 'message' => "Material Copy Data is successfully updated"]);
+    }
+
+    /**
+     * Function that returns the permissions of a User
+     * @return Collection
+     */ 
+    private function getUserPermissions()
+    {
+        $user_permission = db::table('user_links 
+            as a')
+            ->join('user_permission as b', 'a.id', '=', 'b.link_id')
+            ->where('b.user_id', auth::user()->id)
+            ->where('b.status', '=', 'On')
+            ->Where('a.slug_name', 'LIKE', '%' . $this->controller . '%')
+            ->Where('link_id', '!=', 0)
+            ->get();
+        return $user_permission;
     }
 
     /**

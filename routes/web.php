@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 /* Landing Controller */
-Route::get('', function(){
+Route::get('/', function(){
     return View('Landingpage.landing'); // Your Blade template name
 });
 
@@ -91,12 +91,13 @@ route::post('/Material/{id}/Copies/{copy_id}/Update', ['uses'=>'MaterialControll
 
 route::get('/Material/Datatables', ['uses'=>'MaterialController@MaterialsDatatables' , 'as' => 'MaterialsDatatables']);
 route::post('/Material/Delete', ['uses' => 'MaterialController@MaterialsDelete' , 'as' => 'MaterialsDelete']);
-route::get('/Material/History/{id}', ['uses'=>'MaterialController@Materials_History' , 'as' => 'Materials_History']);
+
 
 // Route for getting Edit Values on Materials
 route::post('/Material/Edit/{id}', ['uses'=>'MaterialController@showEditValues' , 'as' => 'Materials.ShowEditValues']);
 
-route::get('/Material/History-Datatables/{id}', ['uses'=>'MaterialController@Materials_History_Datatables' , 'as' => 'Materials_History_Datatables']);
+route::get('/Material/History/{id}', ['uses'=>'MaterialController@Materials_History' , 'as' => 'Materials_History']);
+route::post('/Material/History-Datatables/{id}', ['uses'=>'MaterialController@Materials_History_Datatables' , 'as' => 'Materials_History_Datatables']);
 
 route::get('/Materials/Category/Datatables', ['uses'=>'MaterialsCategory@MaterialsCategoryDatatables' , 'as' => 'MaterialsCategoryDatatables']);
 route::post('/Materials/Category/Delete', ['uses' => 'MaterialsCategory@MaterialsCategoryDelete' , 'as' => 'MaterialsCategoryDelete']);
@@ -157,7 +158,7 @@ route::post('/UserProfile/Update', ['uses' => 'UserController@UserProfile_Update
 /* Archives Controller */
 
 route::get('/Archives/Materials', ['uses' => 'ArchivesController@materials_list', 'as' => 'Archives.Materials_List']);
-route::get('/Archives/Materials/Datatables', ['uses' => 'ArchivesController@materials_list_datatables', 'as' => 'Materials_List_Datatables']);
+route::post('/Archives/Materials/Datatables', ['uses' => 'ArchivesController@materials_list_datatables', 'as' => 'Materials_List_Datatables']);
 route::get('/Archives/Users', ['uses' => 'ArchivesController@users_list', 'as' => 'Archives.Users_List']);
 route::get('/Archives/Users/Datatables', ['uses' => 'ArchivesController@users_list_datatables', 'as' => 'Users_List_Datatables']);
 route::get('/Archives/RoomUse', ['uses' => 'ArchivesController@borrowing_list', 'as' => 'Archives.Borrowing_List']);

@@ -30,7 +30,6 @@
                                 <thead class="text-center">
                                 <tr>
                                     <th class="text-center">ID NO</th>
-                                    <th class="text-center">ACC NUM</th>
                                     <th class="text-center">ISBN</th>
                                     <th class="text-center">TITLE</th>
                                     <th class="text-center">TYPE</th>
@@ -42,16 +41,11 @@
                                 </tbody>
                             </table>
 
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
+                        </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </section>
 @endsection
 
@@ -85,12 +79,13 @@
                 bjQueryUI: true,
                 ajax : {
                     url : "{{ route('Materials_List_Datatables') }}",
-                    type : "GET",
-                    dataType: 'JSON'
+                    type : "POST",
+                    dataType: 'JSON',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 },
                 columns: [
                     {data: 'materials_id', name: 'materials_id'},
-                    {data: 'accnum', name: 'accnum'},
                     {data: 'isbn', name: 'isbn'},
                     {data: 'title', name: 'title'},
                     {data: 'material_type', name: 'material_type'},
