@@ -14,8 +14,8 @@ class CreateUserDetailsTable extends Migration
     public function up()
     {
         Schema::create('user_details', function (Blueprint $table) {
-            $table->id('user_id');
-            $table->foreignId('course_id')->nullable()->default(NULL);;
+            $table->foreignId('user_id')->nullable();
+            $table->foreignId('course_id')->nullable()->default(NULL);
             $table->foreignId('gender_id')->nullable()->default(NULL);
             $table->string('image_url')->nullable()->default(NULL);
             $table->string('firstname');
@@ -32,6 +32,7 @@ class CreateUserDetailsTable extends Migration
             $table->string('employee_number')->nullable()->default(NULL);
             $table->integer('employee_status')->nullable()->default(NULL);
 
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('course_id')->references('id')->on('courses');
             $table->foreign('gender_id')->references('id')->on('gender');
         });
