@@ -13,6 +13,11 @@ class MaterialCopy extends Model
 
     protected $appends = ['digit_in_accession_number', 'formatted_date_recieved'];
 
+    public function borrowings()
+    {
+        return $this->hasMany('App\Models\Borrowing', 'material_copy_id', 'material_copy_id');
+    }    
+
     /**
      * Get the number in the Accession Number
      * @return string
