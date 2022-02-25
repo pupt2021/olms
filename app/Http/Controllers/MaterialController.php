@@ -67,9 +67,8 @@ class MaterialController extends Controller
     public function store(Request $request)
     {
         extract($request->all());
-
-        // If ID is not empty...
-        if ($id !== '') {
+        // If ID is not empty, Update a Material...
+        if ($request->has('id')) {
             $data_updated = [
                 'isbn' => $isbn,
                 'title' => $title,
@@ -81,15 +80,20 @@ class MaterialController extends Controller
                 'type' => $type,
                 'updated_at' => Carbon::now()
             ];
-            // Update the Material
-            db::table('materials')
-                ->where('materials_id', $id)
-                ->update($data_updated);
-
-            return response()->json(['status' => 'success', 'message' => "Materials Category Data is successfully updated"]);
+            
+            try {
+                // Update the Material
+                db::table('materials')
+                    ->where('materials_id', $id)
+                    ->update($data_updated);
+                return response()->json(['status' => 'success', 'message' => "Materials Data is successfully updated"]);
+            } catch (\Illuminate\Database\QueryException $e) {
+                return response()->json(['status' => 'error', 'message' => "Materials Data failed to update"]);
+            }
+            
         } 
 
-        // If ID is empty
+        // If ID is empty...
         else 
         {
             // Create new Material
@@ -312,11 +316,22 @@ class MaterialController extends Controller
         $materialsWithSameAccessionNumber = MaterialCopy::where('accession_number', 'LIKE', $material_category_structure . '%')
             ->get();
 
-        $latestMaterialCopyAccessionNumber = $materialsWithSameAccessionNumber->sortByDesc('digit_in_accession_number')
+        // If there are material copiess with same accession number...
+        if ($materialsWithSameAccessionNumber->isNotEmpty()) 
+        {
+            $latestMaterialCopyAccessionNumber = $materialsWithSameAccessionNumber->sortByDesc('digit_in_accession_number')
             ->first();
-            
-        // Add one to the latest digit
-        $currentDigit = $latestMaterialCopyAccessionNumber->digit_in_accession_number + 1;
+
+            // Add one to the latest digit
+            $currentDigit = $latestMaterialCopyAccessionNumber->digit_in_accession_number + 1;
+        }
+
+        // If there are no material copies with same accession number...
+        else
+        {
+            // Let it be the first one
+            $currentDigit = 1;
+        }
         
         // Loop for the number of copies inputted
         for ($i=0; $i < $request->input('copies'); $i++) 
