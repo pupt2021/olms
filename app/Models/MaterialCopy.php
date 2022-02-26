@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class MaterialCopy extends Model
 {
     protected $table = 'materials_copies';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'material_copy_id';
     protected $guarded = [];
     public $timestamps = false;
 
@@ -15,8 +15,13 @@ class MaterialCopy extends Model
 
     public function borrowings()
     {
-        return $this->hasMany('App\Models\Borrowing', 'material_copy_id', 'material_copy_id');
-    }    
+        return $this->hasMany('App\Models\Borrowing', 'material_copy_id', 'material_copy_id')->orderBy('date_returned', 'DESC');
+    }
+
+    public function material()
+    {
+        return $this->belongsTo('App\Models\Material', 'materials_id', 'materials_id');
+    }  
 
     /**
      * Get the number in the Accession Number
