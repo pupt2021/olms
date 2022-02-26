@@ -9,4 +9,21 @@ class UserDetail extends Model
     protected $table = 'user_details';
     protected $guarded = [];
     public $timestamps = false;
+    protected $appends = ['full_name_with_student_number'];
+
+    /**
+     * Format the full name with student number of the user
+     * @return string
+     */
+    public function getFullNameWithStudentNumberAttribute()
+    {
+        $name = "{$this->lastname}, {$this->firstname}";
+
+        if (! $this->middlename === NULL)
+            $name .= " {$this->middle_name}";
+        
+        $name .= " ({$this->stud_number})";
+
+        return $name;
+    }
 }
