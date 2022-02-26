@@ -11,6 +11,9 @@ use Yajra\DataTables\Facades\DataTables;
 
 use App\Models\Material;
 use App\Models\MaterialCopy;
+use App\Models\Borrowing;
+use App\Models\User;
+use App\Models\UserDetail;
 
 class MaterialController extends Controller
 {
@@ -260,12 +263,16 @@ class MaterialController extends Controller
 
     public function materials_history($id)
     {
-        if (auth::check() == true) {
-            return view('Materials.history')
-                ->with('id', $id);
-        } else {
+        // Check if user is not logged in, and if not, redirect to login page
+        if (! auth::check() == true) 
             return redirect()->route('user_login_page');
-        }
+        
+        $material = Material::where('materials_id', base64_decode($id))
+            ->firstorFail();
+
+        return view('Materials.history', compact('material'))
+            ->with('id', $id);
+       
     }
 
     public function Materials_History_Datatables(Request $request, $id){
@@ -273,26 +280,30 @@ class MaterialController extends Controller
         if (! $request->isMethod('post')) 
             abort(404);
 
-        $data = DB::table('materials')
-            ->select('materials.*', 'user_details.*', db::raw("CONCAT(lastname,',',firstname) as fullname"), DB::raw('(CASE WHEN materials.type = 1 THEN "Borrowing" WHEN materials.type = 2 THEN "Room Use" END) AS material_type'))
-            ->join('borrowings', 'materials.materials_id', '=', 'borrowings.materials_id')
-            ->join('user_details', 'borrowings.users_id', '=', 'user_details.user_id')
-            ->where('borrowings.materials_id', base64_decode($id));
+        $material = Material::where('materials_id', base64_decode($id))
+            ->firstorFail();
 
-        return DataTables::query($data)
-            ->addColumn('user_no', function ($row) {
-                if($row->stud_number != ""){
-                    $user_no = $row->stud_number;
-                }
-                if( $row->faculty_code != "") {
-                    $user_no = $row->faculty_code;
-                }
-                if( $row->employee_number != "") {
-                    $user_no = $row->employee_number;
-                }
-                return $user_no;
+        $materialCopiesID = MaterialCopy::where('materials_id', base64_decode($id))
+            ->pluck('material_copy_id');
+
+        $borrowings = Borrowing::with(['materialCopy', 'user.userDetails'])
+            ->whereIn('material_copy_id', $materialCopiesID);
+
+        return DataTables::eloquent($borrowings)
+            ->addIndexColumn()
+            ->addColumn('accession_number', function ($row){
+                    return $row->materialCopy->accession_number;
+                })
+            ->addColumn('borrower', function ($row){
+                    return $row->user->userDetails->full_name_with_student_number;
+                })
+            ->addColumn('borrowDates', function ($row){
+                    return $row->formatted_date_borrowed_returned;
+                })
+            ->addColumn('status', function ($row){
+                return ($row->status === 1) ? 'BORROWED' : 'RETURNED';
             })
-            ->rawColumns(['user_no'])
+            ->rawColumns(['accession_number', 'borrower', 'borrowDates', 'status'])
             ->toJson();
     }
 

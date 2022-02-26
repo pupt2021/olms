@@ -22,18 +22,20 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header text-center">
+                            <h1 class="display-5">{{ $material->title }}</h1>
+                            <h5 class="display-6">Material Borrowing/Returning History</h5>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive">
                             <table id="datatable" class="table table-bordered table-striped">
                                 <thead class="text-center">
                                 <tr>
-                                    <th class="text-center">USER NUMBER</th>
-                                    <th class="text-center">USER FULLNAME</th>
-                                    <th class="text-center">ACC NUM</th>
-                                    <th class="text-center">ISBN</th>
-                                    <th class="text-center">TYPE</th>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">ACCESSION NUMBER</th>
+                                    <th class="text-center">BORROWER</th>
+                                    <th class="text-center">BORROW-RETURN DATES</th>
+                                    <th class="text-center">STATUS</th>
                                 </tr>
                                 </thead>
                                 <tbody class="text-center">
@@ -72,13 +74,47 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 },
                 columns: [
-                    {data: 'user_no', name: 'user_no'},
-                    {data: 'fullname', name: 'fullname'},
-                    {data: 'accnum', name: 'accnum'},
-                    {data: 'isbn', name: 'isbn'},
-                    {data: 'material_type', name: 'material_type'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false
+                    },
+                    {
+                        data: 'accession_number', 
+                        name: 'accession_number', 
+                        orderable: true, 
+                        searchable: true
+                    },
+                    {
+                        data: 'borrower', 
+                        name: 'borrower', 
+                        orderable: true, 
+                        searchable: true
+                    },
+                    {
+                        data: 'borrowDates', 
+                        name: 'borrowDates', 
+                        orderable: true, 
+                        searchable: true},
+                    {
+                        data: 'status', 
+                        name: 'status', 
+                        orderable: true, 
+                        searchable: true},
                 ],
-                responsive: true,  "autoWidth": false, "searching": false,
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var input = document.createElement("input");
+                        $(input).appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                column.search($(this).val(), false, false, true).draw();
+                            });
+
+                    });
+                },
+                responsive: true,  "autoWidth": false,
                 buttons: ["csv", "excel", "pdf", "print"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         })
