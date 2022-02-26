@@ -37,7 +37,7 @@
                             <table id="datatable" class="table table-bordered table-striped">
                                 <thead class="text-center">
                                 <tr>
-                                    <th class="text-center">ID NO</th>
+                                    <th class="text-center">#</th>
                                     <th class="text-center">ISBN</th>
                                     <th class="text-center" style="width: 40%;">TITLE</th>
                                     <th class="text-center">TYPE</th>
@@ -267,17 +267,40 @@
                     dataType: 'JSON'
                 },
                 columns: [
-                    {data: 'materials_id', name: 'materials_id'},
-                    {data: 'isbn', name: 'isbn'},
-                    {data: 'title', name: 'title'},
-                    {data: 'material_type', name: 'material_type'},
-                    {data: 'copies', name: 'copies'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'isbn', 
+                        name: 'isbn',
+                        orderable: true, 
+                        searchable: true
+                    },
+                    {
+                        data: 'title', 
+                        name: 'title'
+                    },
+                    {
+                        data: 'type', 
+                        name: 'type',
+                        orderable: false, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'copies', 
+                        name: 'copies',
+                        orderable: false, 
+                        searchable: false,
+                    },
                     @if($user_perm -> contains('slug_name', "Material.show") || $user_perm->contains('slug_name', 'MaterialsDelete'))
                     {
                         data: 'action',
                         name: 'action',
-                        orderable: true,
-                        searchable: true
+                        orderable: false, 
+                        searchable: false,
                     },
                     @endif
                 ],

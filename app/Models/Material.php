@@ -11,5 +11,8 @@ class Material extends Model
     protected $guarded = [];
     public $timestamps = true;
 
-
+    public function materialCopies()
+    {
+        return $this->hasMany('App\Models\MaterialCopy', 'materials_id', 'materials_id')->orderBy('date_recieved', 'DESC');
+    }
 }

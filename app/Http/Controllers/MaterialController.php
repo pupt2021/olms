@@ -179,37 +179,35 @@ class MaterialController extends Controller
      */ 
     public function MaterialsDatatables()
     {
-        $data = DB::table('materials')
-            ->select('*', DB::raw('(CASE WHEN type = 1 THEN "Borrowing" WHEN type = 2 THEN "Room Use" END) AS material_type'))
+        $materials = Material::withCount('materialCopies')
             ->where('status', 1);
-
-        $data2 = DB::table('materials_subject_link as a')
-            ->join('materials as b', 'a.mat_id', '=', 'b.materials_id')
-            ->join('materials_subject as c', 'a.sub_id', '=', 'c.id');
-
+        
         $user_permission = $this->getUserPermissions();
 
-        return DataTables::query($data)
-            // Copies Column
-            ->addColumn('copies', function ($row){
-                    $materials_copies_count = db::table('materials_copies')
-                        ->where('materials_id', $row->materials_id)
-                        ->count();
-                    
-                    return $materials_copies_count;
-                })
+        return DataTables::eloquent($materials)
+            
+            ->addIndexColumn()
+            ->addColumn('type', function (Material $material){
+                if ($material->type === 1)
+                    return 'Borrowing';
+                elseif ($material->type === 2)
+                    return 'Room Use';
+            })
+            ->addColumn('copies', function (Material $material){
+                return $material->material_copies_count;
+            })
 
             // Action Buttons Column
-            ->addColumn('action', function ($row) use ($user_permission){
+            ->addColumn('action', function (Material $material) use ($user_permission){
 
                 // Add Button for Material History
                 $btn = '
                         <td>
                             <div class="btn-group-horizontally">
-                                <a type="button" title="VIEW" href="Material/' . base64_encode($row->materials_id) . '" class="btn btn-primary">
+                                <a type="button" title="VIEW" href="Material/' . base64_encode($material->materials_id) . '" class="btn btn-primary">
                                     <span class="fas fa-external-link-alt"></span>
                                 </a>
-                                <a type="button" title="HISTORY" href="Material/History/' . base64_encode($row->materials_id) . '" class="btn btn-info" style="background-color: green">
+                                <a type="button" title="HISTORY" href="Material/History/' . base64_encode($material->materials_id) . '" class="btn btn-info" style="background-color: green">
                                     <span class="fa fa-history"></span>
                                 </a>';
 
@@ -217,7 +215,7 @@ class MaterialController extends Controller
                 if ($user_permission->contains('slug_name', 'Material.show'))
                 {
                     $btn .= '
-                                <a type="button" title="EDIT" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->materials_id . '>
+                                <a type="button" title="EDIT" class="btn btn-info data-edit" id="data-edit" data-id=' . $material->materials_id . '>
                                     <span class="fa fa-edit"></span>
                                 </a>';
                 }
@@ -226,7 +224,7 @@ class MaterialController extends Controller
                 if ($user_permission->contains('slug_name', 'MaterialsDelete'))
                 {
                     $btn .= '
-                                <a type="button" title="DELETE" class="btn btn-warning data-delete" id="data-delete" data-id=' . $row->materials_id . '>
+                                <a type="button" title="DELETE" class="btn btn-warning data-delete" id="data-delete" data-id=' . $material->materials_id . '>
                                     <span class="fa fa-trash"></span>
                                 </a>';
                 }
@@ -237,7 +235,7 @@ class MaterialController extends Controller
                             
                 return $btn;
             })
-            ->rawColumns(['action', 'copies'])
+            ->rawColumns(['action', 'copies', 'type'])
             ->toJson();
     }
 
