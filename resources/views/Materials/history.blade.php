@@ -73,6 +73,7 @@
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 },
+                // THE COLUMNS HERE ARE THE ONES QUERIED IN THE SEARCH BAR
                 columns: [
                     {
                         data: 'DT_RowIndex', 
@@ -82,13 +83,13 @@
                     },
                     {
                         data: 'accession_number', 
-                        name: 'accession_number', 
+                        name: 'materialCopy.accession_number', 
                         orderable: true, 
                         searchable: true
                     },
                     {
                         data: 'borrower', 
-                        name: 'borrower', 
+                        name: 'user.userDetails.lastname', 
                         orderable: true, 
                         searchable: true
                     },
@@ -101,20 +102,10 @@
                         data: 'status', 
                         name: 'status', 
                         orderable: true, 
-                        searchable: true},
+                        searchable: true
+                    },
                 ],
-                initComplete: function () {
-                    this.api().columns().every(function () {
-                        var column = this;
-                        var input = document.createElement("input");
-                        $(input).appendTo($(column.footer()).empty())
-                            .on('change', function () {
-                                column.search($(this).val(), false, false, true).draw();
-                            });
-
-                    });
-                },
-                responsive: true,  "autoWidth": false,
+                responsive: true,  "autoWidth": false, "searching": true,
                 buttons: ["csv", "excel", "pdf", "print"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         })

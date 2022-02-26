@@ -287,21 +287,22 @@ class MaterialController extends Controller
             ->pluck('material_copy_id');
 
         $borrowings = Borrowing::with(['materialCopy', 'user.userDetails'])
-            ->whereIn('material_copy_id', $materialCopiesID);
+            ->whereIn('material_copy_id', $materialCopiesID)
+            ->orderBy('date_returned', 'DESC');
 
         return DataTables::eloquent($borrowings)
             ->addIndexColumn()
-            ->addColumn('accession_number', function ($row){
-                    return $row->materialCopy->accession_number;
+            ->addColumn('accession_number', function (Borrowing $borrowing){
+                    return $borrowing->materialCopy->accession_number;
                 })
-            ->addColumn('borrower', function ($row){
-                    return $row->user->userDetails->full_name_with_student_number;
+            ->addColumn('borrower', function (Borrowing $borrowing){
+                    return $borrowing->user->userDetails->full_name_with_student_number;
                 })
-            ->addColumn('borrowDates', function ($row){
-                    return $row->formatted_date_borrowed_returned;
+            ->addColumn('borrowDates', function (Borrowing $borrowing){
+                    return $borrowing->formatted_date_borrowed_returned;
                 })
-            ->addColumn('status', function ($row){
-                return ($row->status === 1) ? 'BORROWED' : 'RETURNED';
+            ->addColumn('status', function (Borrowing $borrowing){
+                return ($borrowing->status === 1) ? 'BORROWED' : 'RETURNED';
             })
             ->rawColumns(['accession_number', 'borrower', 'borrowDates', 'status'])
             ->toJson();
