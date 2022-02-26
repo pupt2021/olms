@@ -248,8 +248,10 @@
                             Swal.fire({
                                 icon: response.status,
                                 title: response.message
-                            }).then((result) => {
-                                location.reload();
+                            }).then(function(){
+                                redirectURL = "{{ route('Material.show', ':id') }}";
+                                redirectURL = redirectURL.replace(':id', response.materialID);
+                                window.location.href = redirectURL;
                             });
                         }
                     });
