@@ -48,8 +48,8 @@
                                                         <div class="form-group col-md-12">
                                                             <label for="">Search Material Accession No.: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
                                                             <select  class="form-control" name="materials" id="materials" placeholder="Search Materials">
-                                                                <option value=""> Choose option </option>
-                                                                @foreach($materials as $materials)
+                                                                
+                                                                {{-- @foreach($materials as $materials)
                                                                     <option value={{ $materials -> materials_id}}> {{ $materials -> accnum}}</option>
                                                                     @foreach($copies as $copy)
                                                                         @if($materials->materials_id == $copy -> materials_id)
@@ -64,6 +64,25 @@
                                                                             @endif
                                                                         @endif
                                                                     @endforeach
+                                                                @endforeach --}}
+                                                                <option value="" disabled selected> Choose option </option>
+                                                                @foreach($materials as $material)
+                                                                    {{-- <option value={{ $materials -> materials_id}}> {{ $materials -> accnum}}</option>
+                                                                    @foreach($copies as $copy)
+                                                                        @if($material->materials_id == $copy -> materials_id)
+
+                                                                            @if(($material->copies - $copy -> quantity) <= 0)
+                                                                            @else
+                                                                                <option value={{ $material -> materials_id}}> {{ $material -> accnum}}</option>
+                                                                            @endif
+                                                                        @else
+                                                                            @if(($material->copies - $copy -> quantity) <= 0)
+                                                                            @else
+                                                                                <option value={{ $material -> materials_id}}> {{ $material -> accnum}}</option>
+                                                                            @endif
+                                                                        @endif
+                                                                    @endforeach --}}
+                                                                    <option value={{ $material -> material_copy_id}}> {{ $material -> title}}( {{ $material -> accession_number}} )</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -72,7 +91,7 @@
                                                         <div class="form-group col-md-12">
                                                         <label for="">Borrower: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
                                                             <select class="form-control" id="borrower" name="borrower" placeholder="Enter Borrower">
-                                                                <option value=""> Choose option </option>
+                                                                <option value="" disabled selected> Choose option </option>
                                                                 @foreach($borrower as $borrower)
                                                                 <option value={{ $borrower -> id}}> {{ $borrower -> lastname}},{{ $borrower -> firstname}} {{ $borrower -> middlename}} </option>
                                                                 @endforeach
@@ -109,8 +128,9 @@
                             <table id="datatable" class="table table-bordered table-striped">
                                 <thead class="text-center">
                                 <tr>
-                                    <th class="text-center">ID NO</th>
-                                    <th class="text-center">MATERIALS ACC NUM</th>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">MATERIALS ACCESSION NUMBER</th>
+                                    <th class="text-center">BOOK</th>
                                     <th class="text-center">BORROWER NAME</th>
                                     <th class="text-center">CLAIM DATE</th>
                                     <th class="text-center">RETURN DATE</th>
@@ -209,8 +229,14 @@
                     dataType: 'JSON'
                 },
                 columns: [
-                    {data: 'id', name: 'a.id'},
-                    {data: 'accnum', name: 'c.accnum'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
+                    {data: 'accession_number', name: 'c.accession_number'},
+                    {data: 'title', name: 'd.title'},
                     {data: 'fullname', name: 'fullname'},
                     {data: 'date_borrowed', name: 'a.date_borrowed'},
                     {data: 'date_returned', name: 'a.date_returned'},
@@ -278,7 +304,8 @@
                                     Swal.fire(
                                         'Deleted!',
                                         'Your Book has been returned.',
-                                        'success'
+                                        'success',
+                                        
                                     ).then(function(){
                                         location.reload();
                                     });
