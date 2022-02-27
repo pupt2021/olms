@@ -15,4 +15,9 @@ class Material extends Model
     {
         return $this->hasMany('App\Models\MaterialCopy', 'materials_id', 'materials_id')->orderBy('date_recieved', 'DESC');
     }
+
+    public function subjects()
+    {
+        return $this->belongsToMany('App\Models\MaterialSubject', 'materials_subject_link',  'mat_id', 'sub_id');
+    }
 }

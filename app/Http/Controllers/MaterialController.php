@@ -11,6 +11,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 use App\Models\Material;
 use App\Models\MaterialCopy;
+use App\Models\MaterialSubject;
 use App\Models\Borrowing;
 use App\Models\User;
 use App\Models\UserDetail;
@@ -96,10 +97,9 @@ class MaterialController extends Controller
             
         } 
 
-        // If ID is empty...
+        // If ID is empty, Create a new Material...
         else 
         {
-            // Create new Material
             $material_category = db::table('materials_category')
                 ->where('id', $structure)
                 ->first();
@@ -129,7 +129,11 @@ class MaterialController extends Controller
                     ]);
             }
 
-            return response()->json(['status' => 'success', 'message' => "Materials Category Data is successfully inserted"]);
+            return response()->json([
+                'status' => 'success', 
+                'message' => "Materials Category Data is successfully inserted", 
+                'materialID' => base64_encode($id),
+            ]);
         }
     }
 
@@ -180,12 +184,12 @@ class MaterialController extends Controller
     public function MaterialsDatatables()
     {
         $materials = Material::withCount('materialCopies')
+            ->with('subjects')
             ->where('status', 1);
         
         $user_permission = $this->getUserPermissions();
 
         return DataTables::eloquent($materials)
-            
             ->addIndexColumn()
             ->addColumn('type', function (Material $material){
                 if ($material->type === 1)
@@ -196,7 +200,16 @@ class MaterialController extends Controller
             ->addColumn('copies', function (Material $material){
                 return $material->material_copies_count;
             })
-
+            // Title Column with Subjects
+            ->addColumn('title_with_subjects', function (Material $material){
+                
+                $tableData = $material->title . '<br>';
+                foreach ($material->subjects as $subject) 
+                {
+                    $tableData .= '<span class="badge border border-dark" style="background-color:' . $subject->background_color . '; color:' . $subject->text_color . ';">' . $subject->subject_name .'</span> ';
+                }
+                return $tableData;
+            })
             // Action Buttons Column
             ->addColumn('action', function (Material $material) use ($user_permission){
 
@@ -235,7 +248,8 @@ class MaterialController extends Controller
                             
                 return $btn;
             })
-            ->rawColumns(['action', 'copies', 'type'])
+            // Declare columns that have HTML as RawColumns
+            ->rawColumns(['action', 'title_with_subjects'])
             ->toJson();
     }
 
@@ -273,7 +287,8 @@ class MaterialController extends Controller
        
     }
 
-    public function Materials_History_Datatables(Request $request, $id){
+    public function Materials_History_Datatables(Request $request, $id)
+    {
         // Block requests other than POST
         if (! $request->isMethod('post')) 
             abort(404);

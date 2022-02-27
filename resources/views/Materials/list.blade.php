@@ -268,6 +268,7 @@
                     type : "GET",
                     dataType: 'JSON'
                 },
+                // COLUMNS THAT HAVE SEARCHABLE: TRUE ARE QUERIED IN SEARCH BUTTON
                 columns: [
                     {
                         data: 'DT_RowIndex', 
@@ -279,22 +280,24 @@
                         data: 'isbn', 
                         name: 'isbn',
                         orderable: true, 
-                        searchable: true
+                        searchable: true,
                     },
                     {
-                        data: 'title', 
-                        name: 'title'
+                        data: 'title_with_subjects', 
+                        name: 'title',
+                        orderable: true, 
+                        searchable: true,
                     },
                     {
                         data: 'type', 
                         name: 'type',
-                        orderable: false, 
+                        orderable: true, 
                         searchable: false,
                     },
                     {
                         data: 'copies', 
                         name: 'copies',
-                        orderable: false, 
+                        orderable: true, 
                         searchable: false,
                     },
                     @if($user_perm -> contains('slug_name', "Material.show") || $user_perm->contains('slug_name', 'MaterialsDelete'))
