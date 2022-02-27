@@ -44,11 +44,16 @@ class BorrowingController extends Controller
                 ->Where('link_id', '!=', 0)
                 ->get();
 
-            $materials = db::table('materials as a')
-                ->select('a.*')
-                ->where('a.status', 1)
-                ->where('is_available', 1)
-                ->get();
+            // $materials = db::table('materials_copies as a')
+            //     ->select('a.*')
+            //     ->where('a.status', 1)
+            //     ->where('is_available', 1)
+            //     ->get();
+            $materials = db::table('materials_copies')
+                        ->join('materials','materials.materials_id','=','materials_copies.materials_id')
+                        ->where('materials.status', 1)
+                        ->where('materials_copies.is_available', 1)
+                        ->get();
 
             $materials_copy = db::table('materials_copies')
                 ->get();
@@ -105,7 +110,7 @@ class BorrowingController extends Controller
         }
 
         $data_updated = [
-            'materials_id' => $materials,
+            'material_copy_id' => $materials,
             'users_id' => $borrower,
             'type' => 2,
             'updated_at' => Carbon::now()
@@ -120,15 +125,17 @@ class BorrowingController extends Controller
             db::table('materials_copies')
                 ->where('borrows_id', $id)
                 ->update([
-                    'materials_id' => $materials,
+                    'borrows_id' => NULL,
+                    'is_available' => 1
                 ]);
+            
 
             return response()->json(['status' => 'success' , 'message' => "Borrowing Data is successfully updated"]);
 
         }else{
 
             $data_inserted = [
-                'materials_id' => $materials,
+                'material_copy_id' => $materials,
                 'users_id' => $borrower,
                 'date_borrowed' => Carbon::now()->toDateString(),
                 'date_returned' => Carbon::now()->addDay(3)->toDateString(),
@@ -141,15 +148,16 @@ class BorrowingController extends Controller
             $borrowing_id = db::table('borrowings')
                 ->insertGetId($data_inserted);
 
-            db::table('materials_copies')
-                ->insert([
-                    'materials_id' => $materials,
-                    'borrows_id' => $borrowing_id
-                ]);
+            // db::table('materials_copies')
+            //     ->insert([
+            //         'materials_id' => $materials,
+            //         'borrows_id' => $borrowing_id
+            //     ]);
 
-            db::table('materials')
-                ->where('materials_id', $materials)
+            db::table('materials_copies')
+                ->where('material_copy_id', $materials)
                 ->update([
+                    'borrows_id' => $borrowing_id,
                     'is_available' => 0
                 ]);
 
@@ -210,9 +218,11 @@ class BorrowingController extends Controller
     public function Datatables(){
 
         $data = DB::table('borrowings as a')
-            ->select('a.id as id','c.accnum as accnum','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"))
+            ->select('a.id as id','c.accession_number as accession_number','d.title as title','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"))
             ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
-            ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
+            // ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
+            ->join('materials_copies as c', 'a.material_copy_id', '=', 'c.material_copy_id')
+            ->join('materials as d', 'c.materials_id', '=', 'd.materials_id')
             ->where('a.type' , 2)
             ->where('a.status', 1);
 
@@ -231,6 +241,7 @@ class BorrowingController extends Controller
                     $sql = "CONCAT(b.lastname,',',b.firstname)  like ?";
                     $query->whereRaw($sql, ["%{$keyword}%"]);
                 })
+                ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<td></d></tr><div class="btn-group-horizontally">
                                 <a type="button" title="EDIT" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->id . ' ><span class="fa fa-edit"></span></a>
@@ -246,6 +257,7 @@ class BorrowingController extends Controller
                     $sql = "CONCAT(b.lastname,',',b.firstname)  like ?";
                     $query->whereRaw($sql, ["%{$keyword}%"]);
                 })
+                ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<td></d></tr><div class="btn-group-vertical">
                                 <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->id . ' ><span class="fa fa-edit">&nbsp;&nbsp;</span>Edit</a>
