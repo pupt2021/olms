@@ -132,10 +132,20 @@
                 },
                 columns: [
                     {data: 'id', name: 'a.id'},
-                    {data: 'accnum', name: 'c.accnum'},
+                    {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'fullname', name: 'fullname'},
-                    {data: 'date_borrowed', name: 'a.date_borrowed'},
-                    {data: 'date_returned', name: 'a.date_returned'},
+                    {
+                        data: 'formattedBorroweddates', 
+                        name: 'borrowedDates', 
+                        orderable: true, 
+                        searchable: true
+                    },
+                    {
+                        data: 'formattedReturneddates', 
+                        name: 'borrowedDates', 
+                        orderable: true, 
+                        searchable: true
+                    },
                 ],
                 responsive: true,  "autoWidth": false,
                 buttons: ["csv", "excel", "pdf", "print"]
@@ -153,10 +163,20 @@
                 },
                 columns: [
                     {data: 'id', name: 'a.id'},
-                    {data: 'accnum', name: 'c.accnum'},
+                    {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'fullname', name: 'fullname'},
-                    {data: 'date_borrowed', name: 'a.date_borrowed'},
-                    {data: 'date_returned', name: 'a.date_returned'},
+                    {
+                        data: 'formattedBorroweddates', 
+                        name: 'borrowedDates', 
+                        orderable: true, 
+                        searchable: true
+                    },
+                    {
+                        data: 'formattedReturneddates', 
+                        name: 'borrowedDates', 
+                        orderable: true, 
+                        searchable: true
+                    },
                     {
                         data: 'action',
                         name: 'action',
@@ -180,7 +200,7 @@
                 },
                 columns: [
                     {data: 'id', name: 'a.id'},
-                    {data: 'accnum', name: 'c.accnum'},
+                    {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'fullname', name: 'fullname'},
                     {data: 'extension_status', name: 'extension_status'},
                 ],

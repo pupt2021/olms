@@ -106,13 +106,11 @@ route::get('/Materials/Subject/Datatables', ['uses'=>'MaterialsSubject@Materials
 route::post('/Materials/Subject/Delete', ['uses' => 'MaterialsSubject@MaterialsSubjectDelete' , 'as' => 'MaterialsSubjectDelete']);
 
 /* Issuing Controller */
-
 route::get('/Issuing/Datatables', ['uses'=>'IssuingController@Datatables' , 'as' => 'IssuingDatatables']);
 route::post('/Issuing/Delete', ['uses' => 'IssuingController@Deletion' , 'as' => 'IssuingDelete']);
 route::get('/Issuing/Extension', ['uses' => 'IssuingController@book_extension', 'as' => 'book_extension']);
 
 /* Borrowing Controller */
-
 route::get('/Borrowing/Datatables', ['uses'=>'BorrowingController@Datatables' , 'as' => 'BorrowingDatatables']);
 route::post('/Borrowing/Delete', ['uses' => 'BorrowingController@Deletion' , 'as' => 'BorrowingDelete']);
 

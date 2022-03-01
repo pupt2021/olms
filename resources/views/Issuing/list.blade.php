@@ -224,8 +224,18 @@
                     {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'title', name: 'd.title'},
                     {data: 'fullname', name: 'fullname'},
-                    {data: 'date_borrowed', name: 'a.date_borrowed'},
-                    {data: 'date_returned', name: 'a.date_returned'},
+                    {
+                        data: 'formattedBorroweddates', 
+                        name: 'borrowedDates', 
+                        orderable: true, 
+                        searchable: true
+                    },
+                    {
+                        data: 'formattedReturneddates', 
+                        name: 'borrowedDates', 
+                        orderable: true, 
+                        searchable: true
+                    },
                     @if($user_perm -> contains('slug_name', "Issuing.show") || $user_perm->contains('slug_name', 'IssuingDelete'))
                     {
                         data: 'action',

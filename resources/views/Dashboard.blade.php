@@ -179,7 +179,9 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <a href="{{ route('BorrowingDatatables') }}" class="btn btn-secondary">View All Borrowed Books</a>
+                            <a href="{{ route('Issuing.index') }}" class="btn btn-secondary">View All Borrowed Books</a>
+                            <a href="{{ route('Borrowing.index') }}" class="btn btn-secondary">View All Room Used Books</a>
+
                         </div>
                     </div>
                     <!-- /.card -->
@@ -266,7 +268,7 @@
                 },
                 columns: [
                     {data: 'id', name: 'a.id'},
-                    {data: 'accnum', name: 'c.accnum'},
+                    {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'fullname', name: 'fullname'},
                     {data: 'extension_status', name: 'extension_status'},
                     {
@@ -292,7 +294,7 @@
                 },
                 columns: [
                     {data: 'id', name: 'a.id'},
-                    {data: 'accnum', name: 'c.accnum'},
+                    {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'title', name:'title'},
                     {data: 'material_type', name: 'material_type'},
                     {data: 'fullname', name: 'fullname'},

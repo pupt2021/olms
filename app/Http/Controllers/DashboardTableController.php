@@ -54,7 +54,7 @@ class DashboardTableController extends Controller
     public function list_of_extension(){
 
         $data = DB::table('borrowings as a')
-            ->select('a.id as id','c.accession_number as accnum','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
+            ->select('a.id as id','c.accession_number as accession_number','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
                 DB::raw('(CASE WHEN d.status = 0 THEN "PENDING" WHEN d.status = 1 THEN "Approved" WHEN d.status = 2 THEN "Denied" END) AS extension_status'), 'd.id as extension_id')
             ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
             ->join('materials_copies as c', 'a.material_copy_id', '=', 'c.material_copy_id')
@@ -62,6 +62,7 @@ class DashboardTableController extends Controller
             ->where('a.type' , 1)
             ->where('d.status', '=', 0)
             ->where('a.status', 1);
+            
 
         return DataTables::query($data)
                 ->filterColumn('fullname', function($query, $keyword) {
