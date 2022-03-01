@@ -122,6 +122,8 @@ route::get('/ManagePenalty/Datatables', ['uses'=>'ManagePenaltyController@Datata
 
  route::get('/Penalty/Datatables', ['uses'=>'PenaltyController@Datatables' , 'as' => 'PenaltyDatatables']);
  route::get('/Penalty/PDF', ['uses' => 'PenaltyController@PDF' , 'as' => 'PenaltyPDF']);
+ route::get('/Penalty/AllPenaltyPDF', ['uses' => 'PenaltyController@PDF_PrintAllPenalty' , 'as' => 'AllPenaltyPDF']);
+ route::post('/Penalty/SettlePenaltyAndReturnBook/{penaltyID}', ['uses' => 'PenaltyController@SettlePenaltyAndReturnBook' , 'as' => 'SettlePenaltyAndReturnBook']);
 
  /* DTR Controller */
 

@@ -23,12 +23,22 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <div class="d-flex justify-content-end">
+                            <div class="row d-flex justify-content-between">
+                                <div class="col"></div>
+                                
+                                <div class="col text-center">
+                                    <h1 class="display-4">List of Materials</h1>
+                                </div>
+                                
                                 @if($user_perm -> contains('slug_name', "Material.store"))
-                                    <button type="button" class="btn  btn-primary btn-md col-md-2 btn-add" data-toggle="modal" data-target="#modal">
-                                        <span class="fa fa-plus"></span>
-                                        Add Materials
-                                    </button>
+                                    <div class="col d-flex align-items-center justify-content-end">
+                                        <button type="button" class="btn  btn-primary btn-add" data-toggle="modal" data-target="#modal">
+                                                <span class="fa fa-plus"></span>
+                                                Add Materials
+                                        </button>
+                                    </div>
+                                @else
+                                    <div class="col"></div>
                                 @endif
                             </div>
 
