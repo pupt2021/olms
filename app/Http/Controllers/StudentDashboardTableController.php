@@ -30,6 +30,13 @@ class StudentDashboardTableController extends Controller
             $sql = "CONCAT(b.lastname,',',b.firstname)  like ?";
             $query->whereRaw($sql, ["%{$keyword}%"]);
         })
+        ->addColumn('formattedBorroweddates', function ($request) {
+                    
+            return Carbon::create($request->date_borrowed)->format('F d, Y'); // human readable format
+          })
+        ->addColumn('formattedReturneddates', function ($request) {
+            return Carbon::create($request->date_returned)->format('F d, Y'); // human readable format
+        })
         ->toJson();
     }
 
@@ -56,6 +63,13 @@ class StudentDashboardTableController extends Controller
                             </div></td>';
                     return $btn;
                 })
+                ->addColumn('formattedBorroweddates', function ($request) {
+                    
+                    return Carbon::create($request->date_borrowed)->format('F d, Y'); // human readable format
+                  })
+                ->addColumn('formattedReturneddates', function ($request) {
+                    return Carbon::create($request->date_returned)->format('F d, Y'); // human readable format
+                })
                 ->rawColumns(['action'])
                 ->toJson();
     }
@@ -79,6 +93,13 @@ class StudentDashboardTableController extends Controller
         ->filterColumn('fullname', function($query, $keyword) {
             $sql = "CONCAT(b.lastname,',',b.firstname)  like ?";
             $query->whereRaw($sql, ["%{$keyword}%"]);
+        })
+        ->addColumn('formattedBorroweddates', function ($request) {
+                    
+            return Carbon::create($request->date_borrowed)->format('F d, Y'); // human readable format
+          })
+        ->addColumn('formattedReturneddates', function ($request) {
+            return Carbon::create($request->date_returned)->format('F d, Y'); // human readable format
         })
         ->toJson();
     }
