@@ -246,6 +246,19 @@ class IssuingController extends Controller
                             </div></td>';
                     return $btn;
                 })
+                ->addColumn('formattedBorroweddates', function ($request) {
+                    
+                    return Carbon::create($request->date_borrowed)->format('F d, Y'); // human readable format
+                  })
+                ->addColumn('formattedReturneddates', function ($request) {
+                    return Carbon::create($request->date_returned)->format('F d, Y'); // human readable format
+                })
+                // ->filterColumn('date_borrowed', function ($query, $keyword) {
+                // $query->whereRaw("DATE_FORMAT(date_start,'%Y-%m-%d') like ?", ["%$keyword%"]); //date_format when searching using date
+                // })
+                // ->filterColumn('date_return', function ($query, $keyword) {
+                // $query->whereRaw("DATE_FORMAT(date_end,'%Y-%m-%d') like ?", ["%$keyword%"]); //date_format when searching using date
+                // })
                 ->rawColumns(['action'])
                 ->toJson();
         }elseif($user_permission -> contains('slug_name', 'Issuing.show')) {
@@ -255,12 +268,25 @@ class IssuingController extends Controller
                     $query->whereRaw($sql, ["%{$keyword}%"]);
                 })
                 ->addIndexColumn()
-                ->addColumn('action', function ($row) {
+                ->addColumn('action', function ($request) {
                     $btn = '<td></d></tr><div class="btn-group-vertical">
                                 <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->id . ' ><span class="fa fa-edit">&nbsp;&nbsp;</span>Edit</a>
                             </div></td>';
                     return $btn;
                 })
+                ->addColumn('formattedBorroweddates', function ($request) {
+                    
+                    return Carbon::create($request->date_borrowed)->format('F d, Y'); // human readable format
+                  })
+                ->addColumn('formattedReturneddates', function ($request) {
+                    return Carbon::create($request->date_returned)->format('F d, Y'); // human readable format
+                })
+                // ->filterColumn('date_borrowed', function ($query, $keyword) {
+                // $query->whereRaw("DATE_FORMAT(date_start,'%Y-%m-%d') like ?", ["%$keyword%"]); //date_format when searching using date
+                // })
+                // ->filterColumn('date_return', function ($query, $keyword) {
+                // $query->whereRaw("DATE_FORMAT(date_end,'%Y-%m-%d') like ?", ["%$keyword%"]); //date_format when searching using date
+                // })
                 ->rawColumns(['action'])
                 ->toJson();
         }elseif($user_permission -> contains('slug_name', 'IssuingDelete')) {
@@ -276,6 +302,19 @@ class IssuingController extends Controller
                             </div></td>';
                     return $btn;
                 })
+                ->addColumn('formattedBorroweddates', function ($request) {
+                    
+                    return Carbon::create($request->date_borrowed)->format('F d, Y'); // human readable format
+                  })
+                ->addColumn('formattedReturneddates', function ($request) {
+                    return Carbon::create($request->date_returned)->format('F d, Y'); // human readable format
+                })
+                // ->filterColumn('date_borrowed', function ($query, $keyword) {
+                // $query->whereRaw("DATE_FORMAT(date_start,'%Y-%m-%d') like ?", ["%$keyword%"]); //date_format when searching using date
+                // })
+                // ->filterColumn('date_return', function ($query, $keyword) {
+                // $query->whereRaw("DATE_FORMAT(date_end,'%Y-%m-%d') like ?", ["%$keyword%"]); //date_format when searching using date
+                // })
                 ->rawColumns(['action'])
                 ->toJson();
         }

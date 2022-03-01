@@ -242,12 +242,20 @@ class BorrowingController extends Controller
                     $query->whereRaw($sql, ["%{$keyword}%"]);
                 })
                 ->addIndexColumn()
+
                 ->addColumn('action', function ($row) {
                     $btn = '<td></d></tr><div class="btn-group-horizontally">
                                 <a type="button" title="EDIT" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->id . ' ><span class="fa fa-edit"></span></a>
                                 <a type="button" title="RETURN" class="btn btn-warning data-delete" id="data-delete" data-id=' . $row->id . ' ><span class="fa fa-backward">&nbsp;&nbsp;</span>RETURN</a>
                             </div></td>';
                     return $btn;
+                })
+                ->addColumn('formattedBorroweddates', function ($request) {
+                    
+                    return Carbon::create($request->date_borrowed)->format('F d, Y'); // human readable format
+                  })
+                ->addColumn('formattedReturneddates', function ($request) {
+                    return Carbon::create($request->date_returned)->format('F d, Y'); // human readable format
                 })
                 ->rawColumns(['action'])
                 ->toJson();
@@ -264,6 +272,13 @@ class BorrowingController extends Controller
                             </div></td>';
                     return $btn;
                 })
+                ->addColumn('formattedBorroweddates', function ($request) {
+                    
+                    return Carbon::create($request->date_borrowed)->format('F d, Y'); // human readable format
+                  })
+                ->addColumn('formattedReturneddates', function ($request) {
+                    return Carbon::create($request->date_returned)->format('F d, Y'); // human readable format
+                })
                 ->rawColumns(['action'])
                 ->toJson();
         }elseif($user_permission -> contains('slug_name', 'BorrowingDelete')) {
@@ -277,6 +292,13 @@ class BorrowingController extends Controller
                                 <a type="button" class="btn btn-warning data-delete" id="data-delete" data-id=' . $row->id . ' ><span class="fa fa-backward">&nbsp;&nbsp;</span>Return</a>
                             </div></td>';
                     return $btn;
+                })
+                ->addColumn('formattedBorroweddates', function ($request) {
+                    
+                    return Carbon::create($request->date_borrowed)->format('F d, Y'); // human readable format
+                  })
+                ->addColumn('formattedReturneddates', function ($request) {
+                    return Carbon::create($request->date_returned)->format('F d, Y'); // human readable format
                 })
                 ->rawColumns(['action'])
                 ->toJson();

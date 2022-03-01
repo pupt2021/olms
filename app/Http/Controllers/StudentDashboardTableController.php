@@ -16,9 +16,11 @@ class StudentDashboardTableController extends Controller
 
     public function borrow_history(){
         $data = DB::table('borrowings as a')
-            ->select('a.id as id','c.accnum as accnum','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"))
+            ->select('a.id as id','c.accession_number as accession_number','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"))
             ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
-            ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
+            // ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
+            ->join('materials_copies as c', 'a.material_copy_id', '=', 'c.material_copy_id')
+            ->join('materials as d', 'c.materials_id', '=', 'd.materials_id')
             ->where('a.users_id', Auth::user()->id)
             ->where('a.status', 1)
             ->orderBy('a.id', 'desc');
@@ -33,9 +35,11 @@ class StudentDashboardTableController extends Controller
 
     public function list_of_issued_books(){
         $data = DB::table('borrowings as a')
-        ->select('a.id as id','c.accnum as accnum','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"))
+        ->select('a.id as id','c.accession_number as accession_number','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"))
         ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
-        ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
+        // ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
+        ->join('materials_copies as c', 'a.material_copy_id', '=', 'c.material_copy_id')
+        ->join('materials as d', 'c.materials_id', '=', 'd.materials_id')
         ->where('a.type' , 1)
         ->where('a.users_id', auth::user()->id)
         ->where('a.status', 1)
@@ -59,15 +63,17 @@ class StudentDashboardTableController extends Controller
     public function list_of_extension(){
 
         $data = DB::table('borrowings as a')
-        ->select('a.id as id','c.accnum as accnum','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
+        ->select('a.id as id','c.accession_number as accession_number','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
              DB::raw('(CASE WHEN d.status = 0 THEN "PENDING" WHEN d.status = 1 THEN "Approved" WHEN d.status = 2 THEN "Denied" END) AS extension_status'))
         ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
-        ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
-        ->join('book_extension as d', 'a.id', '=' , 'd.borrowings_id')
+        // ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
+        ->join('materials_copies as c', 'a.material_copy_id', '=', 'c.material_copy_id')
+        ->join('materials as d', 'c.materials_id', '=', 'd.materials_id')
+        ->join('book_extension as e', 'a.id', '=' , 'e.borrowings_id')
         ->where('a.type' , 1)
         ->where('a.users_id', auth::user()->id)
         ->where('a.status', 1)
-        ->orderBy('d.id', "DESC");
+        ->orderBy('e.id', "DESC");
 
         return DataTables::query($data)
         ->filterColumn('fullname', function($query, $keyword) {
