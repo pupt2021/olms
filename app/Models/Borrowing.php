@@ -59,7 +59,7 @@ class Borrowing extends Model
     public function getDaysOverdueAttribute(): int
     {
         $returned_date = Carbon::createMidnightDate($this->date_returned);
-        $daysOverdue = (int) $returned_date->diffInDays();
+        $daysOverdue = (int) $returned_date->diffInDays(now(), false);
         return $daysOverdue;
     }
 }
