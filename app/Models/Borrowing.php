@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Borrowing extends Model
 {
+    use SoftDeletes;
+    
     protected $table = 'borrowings';
     protected $primaryKey = 'id';
     protected $guarded = [];
