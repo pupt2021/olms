@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Yajra\DataTables\Facades\DataTables;
 
+use App\Models\Borrowing;
+use App\Models\MaterialCopy;
+use App\Models\Penalty;
+
 class BorrowingController extends Controller
 {
     /**
@@ -33,8 +37,6 @@ class BorrowingController extends Controller
 
     public function index()
     {
-        //
-
         if(auth::check() == true){
             $user_permission = db::table('user_links as a')
                 ->join('user_permission as b', 'a.id', '=' , 'b.link_id')
@@ -51,6 +53,7 @@ class BorrowingController extends Controller
             //     ->get();
             $materials = db::table('materials_copies')
                         ->join('materials','materials.materials_id','=','materials_copies.materials_id')
+                        ->where('materials.type', 2)
                         ->where('materials.status', 1)
                         ->where('materials_copies.is_available', 1)
                         ->get();
@@ -78,16 +81,6 @@ class BorrowingController extends Controller
         }
 
 
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -181,41 +174,8 @@ class BorrowingController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function Datatables()
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    public function Datatables(){
 
         $data = DB::table('borrowings as a')
             ->select('a.id as id','c.accession_number as accession_number','d.title as title','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"))
@@ -313,43 +273,55 @@ class BorrowingController extends Controller
         }
     }
 
-    public function Deletion(Request $request){
-        DB::table('borrowings')
+    public function Deletion(Request $request)
+    {
+        // Get Borrowing Details
+        $borrowing = Borrowing::with('penalty', 'materialCopy')
             ->where('id', $request->id)
-            ->update([
-                'status' => 0,
-                'deleted_at' => Carbon::now()
+            ->firstOrFail();
+
+        try {
+            // Update Material Copy as available
+            MaterialCopy::where('material_copy_id', $borrowing->materialCopy->material_copy_id)
+                ->update([
+                    'is_available' => 1,
+                    'borrows_id' => NULL,
+                ]); 
+
+            // If Borrowing has a Penalty, update the penalty then mark as Done and Deleted
+            if ($borrowing->penalty !== NULL) 
+            {
+                $daysOverdue = $borrowing->days_overdue;
+                Penalty::where("users_id", $borrowing->user->id)
+                    ->where("borrowings_id", $borrowing->id)
+                    ->update([
+                        'penalty_days' => $daysOverdue,
+                        'updated_at' => now(),
+                        'status' => 0,
+                        'deleted_at' => now(),
+                    ]);
+            }
+
+            // Update Borrowing as Done and Deleted
+            Borrowing::where('id', $borrowing->id)
+                ->update([
+                    'status' => 0,
+                    'deleted_at' => now(),
+                    'date_returned' => now(),
+                ]);
+
+            return response()->json([
+                'status' => 'success',
+                'title' => 'Returning Book',
+                'message' => 'Succesfully Returned Book and Settled Penalty associated with it!',
             ]);
 
-        $borrowers_data = db::table('borrowings')
-            ->where('id', $request->id)
-            ->get();
-
-        DB::table('penalty')
-            ->where('borrowings_id', $request->id)
-            ->update([
-                'status' => 0,
-                'deleted_at' => Carbon::now()
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'status' => 'error',
+                'title' => 'Returning Book',
+                'message' => 'Error in Returning Book and Settling Penalty',
             ]);
-
-        db::table('materials_copies')
-            ->where('borrows_id', $request->id)
-            ->update([
-                'status' => 0,
-            ]);
-
-        foreach($borrowers_data as $data){
-            $materials_id = $data -> materials_id;
         }
-
-        db::table('materials')
-            ->where('materials_id', $materials_id)
-            ->update([
-                'is_available' => 1
-            ]);
-
-        return response()->json([
-            'status' => 'success'
-        ]);
     }
 }
