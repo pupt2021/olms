@@ -26,6 +26,11 @@ class Borrowing extends Model
         return $this->belongsTo('App\Models\User', 'users_id');
     }
 
+    public function penalty()
+    {
+        return $this->belongsTo('App\Models\Penalty', 'id', 'borrowings_id');
+    }
+
     /**
      * Format the Date Borrowed + Date Returned Column
      * @return string
