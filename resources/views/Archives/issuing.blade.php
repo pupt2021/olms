@@ -30,9 +30,9 @@
                             <table id="datatable" class="table table-bordered table-striped">
                                 <thead class="text-center">
                                 <tr>
-                                    <th class="text-center">ID NO</th>
-                                    <th class="text-center">MATERIALS ACC NUM</th>
-                                    <th class="text-center">BORROWER NAME</th>
+                                    <th class="text-center" style="width:5%;">#</th>
+                                    <th class="text-center">MATERIAL</th>
+                                    <th class="text-center">BORROWER</th>
                                     <th class="text-center">ACTIONS</th>
                                 </tr>
                                 </thead>
@@ -41,16 +41,11 @@
                                 </tbody>
                             </table>
 
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
+                        </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </section>
 @endsection
 
@@ -81,14 +76,36 @@
                 bjQueryUI: true,
                 ajax : {
                     url : "{{ route('Issuing_List_Datatables') }}",
-                    type : "GET",
-                    dataType: 'JSON'
+                    type : "POST",
+                    dataType: 'JSON',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 },
                 columns: [
-                    {data: 'id', name: 'a.id'},
-                    {data: 'accnum', name: 'c.accnum'},
-                    {data: 'fullname', name: 'fullname'},
-                    {data: 'action', name: 'action'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'material_title_with_subjects_and_accession_number', 
+                        name: 'materialCopy.material.title',
+                        orderable: true, 
+                        searchable: true,
+                    },
+                    {
+                        data: 'formatted_fullname_with_student_number', 
+                        name: 'user.userDetails.lastname',
+                        orderable: true, 
+                        searchable: true,
+                    },
+                    {
+                        data: 'action', 
+                        name: 'action',
+                        orderable: false, 
+                        searchable: false,
+                    },
                 ],
                 dom: 'Bfrtip',
                 responsive: true,  "autoWidth": false,
@@ -109,7 +126,10 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            type:"get",
+                            type:"POST",
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
                             url: '{{ route('Archive_Restore') }}' ,
                             data: {
                                 '_token': $('input[name=_token]').val(),
@@ -117,18 +137,13 @@
                                 'type' : type
                             }, // get all form field value in serialize form
                             success: function(response){
-                                /*swal.fire("Sorry this function currently not working");*/
-                                if(response.status == "success"){
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'Your Data has been restore.',
-                                        'success'
-                                    ).then(function(){
-                                        location.reload();
-                                    });
-                                }else{
-                                    swal.fire("Something is error please contact developer", "","error");
-                                }
+                                Swal.fire(
+                                    'Archive Restore',
+                                    response.message,
+                                    response.status,
+                                ).then(function(){
+                                    location.reload();
+                                });
                             }
                         });
 

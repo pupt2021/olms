@@ -29,11 +29,12 @@
                             <table id="datatable" class="table table-bordered table-striped">
                                 <thead class="text-center">
                                 <tr>
-                                    <th class="text-center">ID NO</th>
+                                    <th class="text-center">#</th>
                                     <th class="text-center">ISBN</th>
-                                    <th class="text-center">TITLE</th>
+                                    <th class="text-center" style="width: 40%;">TITLE</th>
                                     <th class="text-center">TYPE</th>
-                                    <th class="text-center">ACTION</th>
+                                    <th class="text-center">COPIES</th>
+                                    <th class="text-center">ACTIONS</th>
                                 </tr>
                                 </thead>
                                 <tbody class="text-center">
@@ -85,11 +86,42 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 },
                 columns: [
-                    {data: 'materials_id', name: 'materials_id'},
-                    {data: 'isbn', name: 'isbn'},
-                    {data: 'title', name: 'title'},
-                    {data: 'material_type', name: 'material_type'},
-                    {data: 'action', name: 'action'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'isbn', 
+                        name: 'isbn',
+                        orderable: true, 
+                        searchable: true,
+                    },
+                    {
+                        data: 'title_with_subjects', 
+                        name: 'title',
+                        orderable: true, 
+                        searchable: true,
+                    },
+                    {
+                        data: 'type', 
+                        name: 'type',
+                        orderable: true, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'copies', 
+                        name: 'copies',
+                        orderable: true, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'action', 
+                        name: 'action',
+                        orderable: false, 
+                        searchable: false,
+                    },
 
                 ],
                 dom: 'Bfrtip',
@@ -111,7 +143,10 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            type:"get",
+                            type:"POST",
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
                             url: '{{ route('Archive_Restore') }}' ,
                             data: {
                                 '_token': $('input[name=_token]').val(),
@@ -119,18 +154,13 @@
                                 'type' : type
                             }, // get all form field value in serialize form
                             success: function(response){
-                                /*swal.fire("Sorry this function currently not working");*/
-                                if(response.status == "success"){
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'Your Data has been restore.',
-                                        'success'
-                                    ).then(function(){
-                                        location.reload();
-                                    });
-                                }else{
-                                    swal.fire("Something is error please contact developer", "","error");
-                                }
+                                Swal.fire(
+                                    'Archive Restore',
+                                    response.message,
+                                    response.status,
+                                ).then(function(){
+                                    location.reload();
+                                });
                             }
                         });
 

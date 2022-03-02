@@ -160,12 +160,13 @@ route::post('/UserProfile/Update', ['uses' => 'UserController@UserProfile_Update
 route::get('/Archives/Materials', ['uses' => 'ArchivesController@materials_list', 'as' => 'Archives.Materials_List']);
 route::post('/Archives/Materials/Datatables', ['uses' => 'ArchivesController@materials_list_datatables', 'as' => 'Materials_List_Datatables']);
 route::get('/Archives/Users', ['uses' => 'ArchivesController@users_list', 'as' => 'Archives.Users_List']);
-route::get('/Archives/Users/Datatables', ['uses' => 'ArchivesController@users_list_datatables', 'as' => 'Users_List_Datatables']);
+route::post('/Archives/Users/Datatables', ['uses' => 'ArchivesController@users_list_datatables', 'as' => 'Users_List_Datatables']);
+
 route::get('/Archives/RoomUse', ['uses' => 'ArchivesController@borrowing_list', 'as' => 'Archives.Borrowing_List']);
-route::get('/Archives/RoomUse/Datatables', ['uses' => 'ArchivesController@borrowing_list_datatables', 'as' => 'Borrowing_List_Datatables']);
+route::post('/Archives/RoomUse/Datatables', ['uses' => 'ArchivesController@borrowing_list_datatables', 'as' => 'Borrowing_List_Datatables']);
 route::get('/Archives/Borrowing', ['uses' => 'ArchivesController@issuing_list', 'as' => 'Archives.Issuing_List']);
-route::get('/Archives/Borrowing/Datatables', ['uses' => 'ArchivesController@issuing_list_datatables', 'as' => 'Issuing_List_Datatables']);
-route::get('/Archives/Restore', ['uses' => 'ArchivesController@Archive_Restore', 'as' => 'Archive_Restore']);
+route::post('/Archives/Borrowing/Datatables', ['uses' => 'ArchivesController@issuing_list_datatables', 'as' => 'Issuing_List_Datatables']);
+route::post('/Archives/Restore', ['uses' => 'ArchivesController@Archive_Restore', 'as' => 'Archive_Restore']);
 
 
 
