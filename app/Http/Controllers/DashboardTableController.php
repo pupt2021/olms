@@ -82,7 +82,7 @@ class DashboardTableController extends Controller
     public function list_of_issued(){
 
         $data = DB::table('borrowings as a')
-            ->select('a.id as id','d.title','c.accession_number as accnum','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
+            ->select('a.id as id','d.title','c.accession_number as accession_number','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
             \Illuminate\Support\Facades\DB::raw('(CASE WHEN d.type = 1 THEN "BORROWING" WHEN d.type = 2 THEN "ROOM USE" END) AS material_type'))
             ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
             ->join('materials_copies as c', 'a.material_copy_id', '=', 'c.material_copy_id')

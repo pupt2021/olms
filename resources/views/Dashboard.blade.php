@@ -178,7 +178,7 @@
 
                         </div>
                         <!-- /.card-body -->
-                        <div class="card-footer">
+                        <div class="card-footer text-center">
                             <a href="{{ route('Issuing.index') }}" class="btn btn-secondary">View All Borrowed Books</a>
                             <a href="{{ route('Borrowing.index') }}" class="btn btn-secondary">View All Room Used Books</a>
 
