@@ -267,7 +267,7 @@
                     dataType: 'JSON'
                 },
                 columns: [
-                    {data: 'id', name: 'a.id'},
+                    {data: 'id', name: 'extension_id'},
                     {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'fullname', name: 'fullname'},
                     {data: 'extension_status', name: 'extension_status'},
@@ -307,13 +307,13 @@
                 var id = $(this).attr("data-id");
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "Do you want to accept this request extension!",
+                    text: "Do you want to accept this request extension?",
                     icon: 'info',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes!',
-                    cancelButtonText: 'no',
+                    confirmButtonText: 'Accept!',
+                    cancelButtonText: 'Deny',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -321,6 +321,8 @@
                             url: '{{ route('book_extension') }}' ,
                             data: {
                                 'extension_id' : id,
+                                // 'user_id': user_id,
+                                // 'borrowing_id' : borrowing_id,
                                 'type' : "accept"
                             }, // get all form field value in serialize form
                             success: function(response){

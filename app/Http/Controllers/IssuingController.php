@@ -362,7 +362,7 @@ class IssuingController extends Controller
                 'status' => 'success'
             ]);
         }
-
+        
         if($type == "accept"){
 
             $data = db::table('book_extension')
@@ -376,6 +376,8 @@ class IssuingController extends Controller
             db::table('book_extension')
             ->where('id', $extension_id)
             ->update(['status' => 1]);
+            
+           
 
             $penalty = db::table('penalty_settings')
             ->get();
@@ -401,7 +403,7 @@ class IssuingController extends Controller
                 ->update([
                     'date_returned' => $date->toDateString()
                 ]);
-
+             
             return response()->json([
                 'status' => 'success'
             ]);

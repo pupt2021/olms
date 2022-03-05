@@ -78,7 +78,7 @@ class StudentDashboardTableController extends Controller
 
         $data = DB::table('borrowings as a')
         ->select('a.id as id','c.accession_number as accession_number','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
-             DB::raw('(CASE WHEN d.status = 0 THEN "PENDING" WHEN d.status = 1 THEN "Approved" WHEN d.status = 2 THEN "Denied" END) AS extension_status'))
+             DB::raw('(CASE WHEN e.status = 0 THEN "PENDING" WHEN e.status = 1 THEN "Approved" WHEN e.status = 2 THEN "Denied" END) AS extension_status'))
         ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
         // ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
         ->join('materials_copies as c', 'a.material_copy_id', '=', 'c.material_copy_id')
