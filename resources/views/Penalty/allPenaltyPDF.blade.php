@@ -75,19 +75,21 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>
-                {{ $penalty->borrowing->materialCopy->material->title }}
-                <br>
-                {{ $penalty->borrowing->materialCopy->material->isbn }}
-                <br>
-                ({{ $penalty->borrowing->materialCopy->accession_number }})
-            </td>
-            <td>{{ $penalty->borrowing->formatted_date_borrowed }}</td>
-            <td>{{ $penalty->borrowing->formatted_date_returned }}</td>
-            <td>{{ $penalty->penalty_days }} days</td>
-            <td>P{{$amount_due}}</td>
-        </tr>
+        @foreach($penalties as $penalty)
+            <tr>
+                <td>
+                    {{ $penalty->borrowing->materialCopy->material->title }}
+                    <br>
+                    {{ $penalty->borrowing->materialCopy->material->isbn }}
+                    <br>
+                    ({{ $penalty->borrowing->materialCopy->accession_number }})
+                </td>
+                <td>{{ $penalty->borrowing->formatted_date_borrowed }}</td>
+                <td>{{ $penalty->borrowing->formatted_date_returned }}</td>
+                <td>{{ $penalty->penalty_days }} days</td>
+                <td>P{{number_format($penalty_fee * $penalty->penalty_days, 2)}}</td>
+            </tr>
+        @endforeach
     </tbody>
 </table>
 
@@ -97,7 +99,7 @@
     <tr>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td style="float: right;">Total Amount: {{ $amount_due }}</td>
+        <td style="float: right;">Total Amount: {{ $total_amount_due }}</td>
     </tr>
 </table>
 

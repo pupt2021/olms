@@ -54,14 +54,15 @@ class DashboardTableController extends Controller
     public function list_of_extension(){
 
         $data = DB::table('borrowings as a')
-            ->select('a.id as id','c.accnum as accnum','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
-                DB::raw('(CASE WHEN d.status = 0 THEN "PENDING" WHEN d.status = 1 THEN "Approved" WHEN d.status = 2 THEN "Denied" END) AS extension_status'), 'd.id as extension_id')
+            ->select('a.id as id','c.accession_number as accession_number','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
+                DB::raw('(CASE WHEN d.status = 0 THEN "PENDING" WHEN d.status = 1 THEN "Approved" WHEN d.status = 2 THEN "Denied" END) AS extension_status'), 'd.id as extension_id','d.users_id as user_id','d.borrowings_id as borrowing_id')
             ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
-            ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
+            ->join('materials_copies as c', 'a.material_copy_id', '=', 'c.material_copy_id')
             ->join('book_extension as d', 'a.id', '=' , 'd.borrowings_id')
-            ->where('a.type' , 1)
+            ->where('a.type', 1)
             ->where('d.status', '=', 0)
             ->where('a.status', 1);
+            
 
         return DataTables::query($data)
                 ->filterColumn('fullname', function($query, $keyword) {
@@ -70,7 +71,7 @@ class DashboardTableController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<td></d></tr><div class="btn-group-vertical">
-                                <a type="button" class="btn btn-warning extension" id="extension" data-id=' . $row->extension_id . ' ><span class="">&nbsp;&nbsp;</span>Accept Extension</a>
+                                <a type="button" class="btn btn-warning extension" id="extension" data-id=' . $row->extension_id . ' ><span class="">&nbsp;&nbsp;</span>Manage Extension</a>
                             </div></td>';
                     return $btn;
                 })
@@ -81,12 +82,13 @@ class DashboardTableController extends Controller
     public function list_of_issued(){
 
         $data = DB::table('borrowings as a')
-            ->select('a.id as id','c.title','c.accnum as accnum','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
-               \Illuminate\Support\Facades\DB::raw('(CASE WHEN c.type = 1 THEN "BORROWING" WHEN c.type = 2 THEN "ROOM USE" END) AS material_type'))
+            ->select('a.id as id','d.title','c.accession_number as accession_number','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"),
+            \Illuminate\Support\Facades\DB::raw('(CASE WHEN d.type = 1 THEN "BORROWING" WHEN d.type = 2 THEN "ROOM USE" END) AS material_type'))
             ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
-            ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
+            ->join('materials_copies as c', 'a.material_copy_id', '=', 'c.material_copy_id')
+            ->join('materials as d', 'c.materials_id', '=', 'd.materials_id')
             ->where('a.status', 1);
-
+           
         return DataTables::query($data)
             ->filterColumn('fullname', function($query, $keyword) {
                 $sql = "CONCAT(b.lastname,',',b.firstname)  like ?";

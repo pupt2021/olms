@@ -31,9 +31,9 @@
                             <table id="datatable" class="table table-bordered table-striped text-center">
                                 <thead>
                                 <tr>
-                                    <th> USER ID </th>
-                                    <th> USER FULLNAME </th>
-                                    <th> USER EMAIL </th>
+                                    <th class="text-center" style="width:5%;">#</th>
+                                    <th> FULLNAME </th>
+                                    <th> EMAIL </th>
                                     <th> ACTION </th>
                                 </tr>
                                 </thead>
@@ -41,16 +41,11 @@
 
                                 </tbody>
                             </table>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
+                        </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </section>
 @endsection
 
@@ -75,14 +70,36 @@
                 bjQueryUI: true,
                 ajax : {
                     url : "{{ route('Users_List_Datatables') }}",
-                    type : "GET",
-                    dataType: 'JSON'
+                    type : "POST",
+                    dataType: 'JSON',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 },
                 columns: [
-                    {data: 'userid', name: 'userid'},
-                    {data: 'fullname', name: 'fullname'},
-                    {data: 'email', name: 'email'},
-                    {data: 'action', name: 'action'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'formatted_fullname_with_student_number', 
+                        name: 'userDetails.lastname',
+                        orderable: true, 
+                        searchable: true,
+                    },
+                    {
+                        data: 'email', 
+                        name: 'email',
+                        orderable: true, 
+                        searchable: true,
+                    },
+                    {
+                        data: 'action', 
+                        name: 'action',
+                        orderable: false, 
+                        searchable: false,
+                    },
 
                 ],
                 responsive: true,  "autoWidth": false,
@@ -103,7 +120,10 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            type:"get",
+                            type:"POST",
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
                             url: '{{ route('Archive_Restore') }}' ,
                             data: {
                                 '_token': $('input[name=_token]').val(),
@@ -111,18 +131,13 @@
                                 'type' : type
                             }, // get all form field value in serialize form
                             success: function(response){
-                                /*swal.fire("Sorry this function currently not working");*/
-                                if(response.status == "success"){
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'Your Data has been restore.',
-                                        'success'
-                                    ).then(function(){
-                                        location.reload();
-                                    });
-                                }else{
-                                    swal.fire("Something is error please contact developer", "","error");
-                                }
+                                Swal.fire(
+                                    'Archive Restore',
+                                    response.message,
+                                    response.status,
+                                ).then(function(){
+                                    location.reload();
+                                });
                             }
                         });
 

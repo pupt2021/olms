@@ -106,13 +106,11 @@ route::get('/Materials/Subject/Datatables', ['uses'=>'MaterialsSubject@Materials
 route::post('/Materials/Subject/Delete', ['uses' => 'MaterialsSubject@MaterialsSubjectDelete' , 'as' => 'MaterialsSubjectDelete']);
 
 /* Issuing Controller */
-
 route::get('/Issuing/Datatables', ['uses'=>'IssuingController@Datatables' , 'as' => 'IssuingDatatables']);
 route::post('/Issuing/Delete', ['uses' => 'IssuingController@Deletion' , 'as' => 'IssuingDelete']);
 route::get('/Issuing/Extension', ['uses' => 'IssuingController@book_extension', 'as' => 'book_extension']);
 
 /* Borrowing Controller */
-
 route::get('/Borrowing/Datatables', ['uses'=>'BorrowingController@Datatables' , 'as' => 'BorrowingDatatables']);
 route::post('/Borrowing/Delete', ['uses' => 'BorrowingController@Deletion' , 'as' => 'BorrowingDelete']);
 
@@ -124,6 +122,8 @@ route::get('/ManagePenalty/Datatables', ['uses'=>'ManagePenaltyController@Datata
 
  route::get('/Penalty/Datatables', ['uses'=>'PenaltyController@Datatables' , 'as' => 'PenaltyDatatables']);
  route::get('/Penalty/PDF', ['uses' => 'PenaltyController@PDF' , 'as' => 'PenaltyPDF']);
+ route::get('/Penalty/AllPenaltyPDF', ['uses' => 'PenaltyController@PDF_PrintAllPenalty' , 'as' => 'AllPenaltyPDF']);
+ route::post('/Penalty/SettlePenaltyAndReturnBook/{penaltyID}', ['uses' => 'PenaltyController@SettlePenaltyAndReturnBook' , 'as' => 'SettlePenaltyAndReturnBook']);
 
  /* DTR Controller */
 
@@ -160,12 +160,13 @@ route::post('/UserProfile/Update', ['uses' => 'UserController@UserProfile_Update
 route::get('/Archives/Materials', ['uses' => 'ArchivesController@materials_list', 'as' => 'Archives.Materials_List']);
 route::post('/Archives/Materials/Datatables', ['uses' => 'ArchivesController@materials_list_datatables', 'as' => 'Materials_List_Datatables']);
 route::get('/Archives/Users', ['uses' => 'ArchivesController@users_list', 'as' => 'Archives.Users_List']);
-route::get('/Archives/Users/Datatables', ['uses' => 'ArchivesController@users_list_datatables', 'as' => 'Users_List_Datatables']);
+route::post('/Archives/Users/Datatables', ['uses' => 'ArchivesController@users_list_datatables', 'as' => 'Users_List_Datatables']);
+
 route::get('/Archives/RoomUse', ['uses' => 'ArchivesController@borrowing_list', 'as' => 'Archives.Borrowing_List']);
-route::get('/Archives/RoomUse/Datatables', ['uses' => 'ArchivesController@borrowing_list_datatables', 'as' => 'Borrowing_List_Datatables']);
+route::post('/Archives/RoomUse/Datatables', ['uses' => 'ArchivesController@borrowing_list_datatables', 'as' => 'Borrowing_List_Datatables']);
 route::get('/Archives/Borrowing', ['uses' => 'ArchivesController@issuing_list', 'as' => 'Archives.Issuing_List']);
-route::get('/Archives/Borrowing/Datatables', ['uses' => 'ArchivesController@issuing_list_datatables', 'as' => 'Issuing_List_Datatables']);
-route::get('/Archives/Restore', ['uses' => 'ArchivesController@Archive_Restore', 'as' => 'Archive_Restore']);
+route::post('/Archives/Borrowing/Datatables', ['uses' => 'ArchivesController@issuing_list_datatables', 'as' => 'Issuing_List_Datatables']);
+route::post('/Archives/Restore', ['uses' => 'ArchivesController@Archive_Restore', 'as' => 'Archive_Restore']);
 
 
 
@@ -179,7 +180,7 @@ route::resource('/Permissions', 'PermissionController');
 route::resource('/Material', 'MaterialController')->only(['index', 'store', 'show']);
 route::resource('/MaterialsCategory', 'MaterialsCategory');
 route::resource('/MaterialsSubject', 'MaterialsSubject');
-route::resource('/Issuing', 'IssuingController');
-route::resource('/Borrowing', 'BorrowingController');
+route::resource('/Issuing', 'IssuingController')->only(['index', 'store', 'show']);
+route::resource('/Borrowing', 'BorrowingController')->only(['index', 'store', 'show']);
 Route::resource('/ManagePenalty', 'ManagePenaltyController');
 Route::resource('/Penalty', 'PenaltyController');

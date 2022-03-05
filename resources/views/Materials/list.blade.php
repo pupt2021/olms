@@ -23,16 +23,22 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <div class="">
+                            <div class="row d-flex justify-content-between">
+                                <div class="col"></div>
+                                
+                                <div class="col text-center">
+                                    <h1 class="display-4">List of Materials</h1>
+                                </div>
+                                
                                 @if($user_perm -> contains('slug_name', "Material.store"))
-                                        <button type="button" class="btn  btn-primary btn-md col-md-2 btn-add" data-toggle="modal" data-target="#modal">
-                                            <span class="fa fa-plus"></span>
-                                            Add Materials
+                                    <div class="col d-flex align-items-center justify-content-end">
+                                        <button type="button" class="btn  btn-primary btn-add" data-toggle="modal" data-target="#modal">
+                                                <span class="fa fa-plus"></span>
+                                                Add Materials
                                         </button>
-                                       {{-- <button type="button" class="btn btn-primary btn-md col-md-2 float-right" data-toggle="modal" data-target="#modal">
-                                            <span class="fa fa-plus"></span>
-                                            Add Batch Materials
-                                        </button>--}}
+                                    </div>
+                                @else
+                                    <div class="col"></div>
                                 @endif
                             </div>
 
@@ -41,7 +47,7 @@
                             <table id="datatable" class="table table-bordered table-striped">
                                 <thead class="text-center">
                                 <tr>
-                                    <th class="text-center">ID NO</th>
+                                    <th class="text-center">#</th>
                                     <th class="text-center">ISBN</th>
                                     <th class="text-center" style="width: 40%;">TITLE</th>
                                     <th class="text-center">TYPE</th>
@@ -53,15 +59,10 @@
 
                                 </tbody>
                             </table>
-
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
+                        </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
 
             {{-- MATERIALS FORM MODAL --}}
             <div class="modal" id="modal">
@@ -76,7 +77,9 @@
                         <form id="form">
                             <div class="modal-body">
                                 {{ csrf_field() }}
-                                <input type="hidden" name="id" id="id">
+                                <input type="hidden" id="id">
+
+                                {{-- Accession Template --}}
                                 <div class="row">
                                     <div class="form-group col-md-12 for_edit">
                                         <label for="">Accession No. Template: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
@@ -88,6 +91,8 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                {{-- ISBN, Title --}}
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="">ISBN: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
@@ -98,6 +103,8 @@
                                         <input type="text" class="form-control" name="title" id="title" placeholder="Enter Title">
                                     </div>
                                 </div>
+
+                                {{-- Subject Select --}}
                                 <div class="row">
                                     <div class="form-group col-md-6 for_edit">
                                     <label for="">Subject: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
@@ -112,6 +119,8 @@
                                         <input type="text" class="form-control" name="callno" id="callno" placeholder="Enter Call No.">
                                     </div>
                                 </div>
+
+                                {{-- Author, Publisher --}}
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="">Author:</label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
@@ -122,6 +131,8 @@
                                         <input type="text" class="form-control" name="publisher" id="publisher" placeholder="Enter Publisher.">
                                     </div>
                                 </div>
+
+                                {{-- Edition Select --}}
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="">Edition: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
@@ -139,20 +150,14 @@
                                             <option value="10th Edition">10th Edition</option>
                                         </select>
                                     </div>
-                                    {{-- <div class="form-group col-md-6">
-                                        <label for="">Date Received: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                        <input type="date" class="form-control" name="daterec" id="daterec" placeholder="Enter Date Received: ">
-                                    </div> --}}
                                 </div>
+
+                                {{-- Copyright, Type --}}
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="">Copyright:  </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
                                         <input type="number" class="form-control" name="copyright" id="copyright" placeholder="Enter Copyright: ">
                                     </div>
-                                    {{-- <div class="form-group col-md-4">
-                                        <label for="">Copies: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                        <input type="number" class="form-control" name="copies" value="0" min="0" id="copies" placeholder="Enter Copies: ">
-                                    </div> --}}
                                     <div class="form-group col-md-4">
                                         <label for="">Type:  </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
                                         <select type="text" class="form-control" name="type" id="type" placeholder="Enter Type: ">
@@ -168,13 +173,10 @@
                                 <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
                         </form>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
             </div>
-        </div>
-        <!-- /.container-fluid -->
+        </div><!-- /.container-fluid -->
     </section>
 @endsection
 
@@ -200,6 +202,8 @@
             $('.btn-add').on('click', function(){
                 $('.for_edit').attr("hidden", false);
                 $('.add_mask').addClass("col-md-6").removeClass("col-md-12");
+                $('#id').removeAttr('name');
+                $('#id').removeAttr('value');
             });
 
             $('#form').validate({
@@ -244,28 +248,27 @@
                 submitHandler: function(form) {
                     jQuery.ajax({
                         url:'{{ route('Material.store') }}',
-                        type: "post",
+                        type: "POST",
                         data: {
                             '_token': $('input[name=_token]').val(),
                             'id' : $('#id').val(),
                         },
                         data: $('#form').serialize(),
                         success: function(response){
-                            if(response.status == "success"){
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: response.message
-                                }).then((result) => {
-                                    location.reload();
-                                });
-                            }else{
-
-                            }
+                            Swal.fire({
+                                icon: response.status,
+                                title: response.message
+                            }).then(function(){
+                                redirectURL = "{{ route('Material.show', ':id') }}";
+                                redirectURL = redirectURL.replace(':id', response.materialID);
+                                window.location.href = redirectURL;
+                            });
                         }
                     });
                 }
             });
 
+            // Loads data to Material List Datatable
             var table = $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -275,18 +278,44 @@
                     type : "GET",
                     dataType: 'JSON'
                 },
+                // COLUMNS THAT HAVE SEARCHABLE: TRUE ARE QUERIED IN SEARCH BUTTON
                 columns: [
-                    {data: 'materials_id', name: 'materials_id'},
-                    {data: 'isbn', name: 'isbn'},
-                    {data: 'title', name: 'title'},
-                    {data: 'material_type', name: 'material_type'},
-                    {data: 'copies', name: 'copies'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'isbn', 
+                        name: 'isbn',
+                        orderable: true, 
+                        searchable: true,
+                    },
+                    {
+                        data: 'title_with_subjects', 
+                        name: 'title',
+                        orderable: true, 
+                        searchable: true,
+                    },
+                    {
+                        data: 'type', 
+                        name: 'type',
+                        orderable: true, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'copies', 
+                        name: 'copies',
+                        orderable: true, 
+                        searchable: false,
+                    },
                     @if($user_perm -> contains('slug_name', "Material.show") || $user_perm->contains('slug_name', 'MaterialsDelete'))
                     {
                         data: 'action',
                         name: 'action',
-                        orderable: true,
-                        searchable: true
+                        orderable: false, 
+                        searchable: false,
                     },
                     @endif
                 ],
@@ -313,6 +342,7 @@
                             $('.for_edit').attr("hidden", true);
                             $('.add_mask').removeClass("col-md-6").addClass("col-md-12");
                             $('#id').val(response[0].materials_id);
+                            $('#id').attr('name', 'id');
                             $('#isbn').val(response[0].isbn);
                             $('#title').val(response[0].title);
                             $('#callno').val(response[0].callno);

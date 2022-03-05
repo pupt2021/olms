@@ -16,6 +16,8 @@ class CreateMaterialsSubjectTable extends Migration
         Schema::create('materials_subject', function (Blueprint $table) {
             $table->id();
             $table->string('subject_name',50);
+            $table->char('background_color', 10)->default('#1976D2');
+            $table->char('text_color', 10)->default('#FFFFFF');
             $table->integer('status')->default(1);
             $table->timestamps();
             $table->softDeletes();
