@@ -26,6 +26,7 @@ class StudentDashboardTableController extends Controller
             ->orderBy('a.id', 'desc');
 
         return DataTables::query($data)
+        ->addIndexColumn()
         ->filterColumn('fullname', function($query, $keyword) {
             $sql = "CONCAT(b.lastname,',',b.firstname)  like ?";
             $query->whereRaw($sql, ["%{$keyword}%"]);
@@ -53,6 +54,7 @@ class StudentDashboardTableController extends Controller
         ->orderBy('a.id', 'DESC');
 
         return DataTables::query($data)
+                ->addIndexColumn()
                 ->filterColumn('fullname', function($query, $keyword) {
                     $sql = "CONCAT(b.lastname,',',b.firstname)  like ?";
                     $query->whereRaw($sql, ["%{$keyword}%"]);
@@ -90,6 +92,7 @@ class StudentDashboardTableController extends Controller
         ->orderBy('e.id', "DESC");
 
         return DataTables::query($data)
+        ->addIndexColumn()
         ->filterColumn('fullname', function($query, $keyword) {
             $sql = "CONCAT(b.lastname,',',b.firstname)  like ?";
             $query->whereRaw($sql, ["%{$keyword}%"]);

@@ -131,7 +131,12 @@
                     dataType: 'JSON'
                 },
                 columns: [
-                    {data: 'id', name: 'a.id'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
                     {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'fullname', name: 'fullname'},
                     {
@@ -162,7 +167,12 @@
                     dataType: 'JSON'
                 },
                 columns: [
-                    {data: 'id', name: 'a.id'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
                     {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'fullname', name: 'fullname'},
                     {
@@ -199,7 +209,12 @@
                     dataType: 'JSON'
                 },
                 columns: [
-                    {data: 'id', name: 'a.id'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
                     {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'fullname', name: 'fullname'},
                     {data: 'extension_status', name: 'extension_status'},
