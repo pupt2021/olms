@@ -43,7 +43,11 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <a type="button" href="{{ route('user_logout') }}" class="btn btn-danger btn-block btn-sm"><i class="fa fa-power-off"></i> Logout </a>
-        <!-- Navbar Search -->
+    </ul>
+</nav>
+
+
+<!-- Navbar Search -->
         {{-- <li class="nav-item">
             <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                 <i class="fas fa-search"></i>
@@ -162,8 +166,4 @@
                 <i class="fas fa-th-large"></i>
             </a>
         </li> --}}
-
-    </ul>
-</nav>
-
 

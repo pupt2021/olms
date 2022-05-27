@@ -72,48 +72,57 @@ class DTRController extends Controller
     public function dtr_login(Request $request){
         extract($request->all());
 
+        //Check if username and password is correct
+        $credentials = $request->only('username', 'password');
+        if (! Auth::attempt($credentials)) {
+            // If account credentials is wrong...
+            return response()->json(['status' => 'error' , 'message' => 'Incorrect Username or Password']);
+        }
+
+        // Get User Information
         $users = db::table('users')
             ->where('username', $username)
-            ->get();
-
-        foreach($users as $data){
-            $id = $data->id;
-        }
+            ->first();
 
         $user_details = db::table('user_details')
-            ->where('user_id', $id)
-            ->get();
+            ->where('user_id', $users->id)
+            ->first();
 
-        foreach($user_details as $data_details){
-            $fullname = $data_details -> lastname . ',' . $data_details -> firstname .' '. $data_details ->middlename;
-        }
+        $fullname = $user_details->lastname . ', ' . $user_details->firstname . ' ' . $user_details->middlename;
 
+        // Get Current DTR Information of User
         $existing_dtr = db::table('timein')
-            ->where('users_id', $id)
+            ->where('users_id', $users->id)
             ->where('status', '!=', 0)
             ->get();
 
-        if(count($existing_dtr) > 0){
+        // If user is timed-in
+        if(($existing_dtr)->isNotEmpty())
+        {
+            // Time-out the existing DTR Entry
             DB::table('timein')
-                ->where('users_id', $id)
+                ->where('users_id', $users->id)
                 ->update([
                         'status' => 0,
                         'timeout' => carbon::now()
                     ]);
 
-            $message = $fullname . "is successfully Time-out";
-        }else{
+            $message = $fullname . "has successfully <br> Timed-out";
+        }
+        else
+        {
+            // Time-in the the User in new DTR Entry
             db::table('timein')
             ->insert([
-                'users_id' => $id,
+                'users_id' => $users->id,
                 'timein' => carbon::now(),
                 'status'  => 1
             ]);
-            $message = $fullname . " is successfully Time-in";
+            $message = $fullname . " has successfully <br> Timed-in";
         }
 
         return response()->json(['status' => 'success' , 'message' => $message]);
-    } // End of function
+    }
 
     public function mainpage(Request $request){
         extract($request->all());
@@ -131,10 +140,20 @@ class DTRController extends Controller
 
     public function search_book(){
         $data = DB::table('materials')
-            ->select('*',  DB::raw('(CASE WHEN type = 1 THEN "Borrow" WHEN type = 2 THEN "Room Use" END) AS type'), DB::raw('(CASE WHEN is_available = 0 THEN "NOT AVAILABLE" WHEN is_available = 1 THEN "AVAILABLE" WHEN is_available = 2 THEN "RESERVED" END) AS is_available'))
+            ->select('*',  DB::raw('(CASE WHEN type = 1 THEN "Borrow" WHEN type = 2 THEN "Room Use" END) AS type'), )
             ->where('status', 1);
-
+        //DB::raw('(CASE WHEN is_available = 0 THEN "NOT AVAILABLE" WHEN is_available = 1 THEN "AVAILABLE" WHEN is_available = 2 THEN "RESERVED" END) AS is_available')
         return DataTables::query($data)
+            // Copies Column
+            ->addColumn('available_copies', function ($row){
+                    $materials_copies_count = db::table('materials_copies')
+                        ->where('materials_id', $row->materials_id)
+                        ->where('is_available', 1)
+                        ->count();
+                    
+                    return $materials_copies_count;
+                })
+            ->rawColumns(['available_copies'])
             ->toJson();
     }
 

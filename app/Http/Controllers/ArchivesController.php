@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Yajra\DataTables\Facades\DataTables;
 
+use App\Models\Borrowing;
+use App\Models\Material;
+use App\Models\User;
+
 class ArchivesController extends Controller
 {
-    //
-
     protected $controller;
     protected $routeName;
 
@@ -23,205 +25,328 @@ class ArchivesController extends Controller
         list($this -> controller, $action) = explode('Controller@', $controllerAction);
 
         $this -> routeName = Route::currentRouteName();
-
     }
 
-    public function materials_list(){
-        if(auth::check() == true){
-
-            $user_permission = db::table('user_links as a')
-                ->join('user_permission as b', 'a.id', '=' , 'b.link_id')
-                ->where('b.user_id', auth::user()->id)
-                ->where('b.status' , '=' , 'On')
-                ->Where('a.slug_name', 'LIKE' , '%'.$this->controller.'%')
-                ->Where('link_id', '!=', 0)
-                ->get();
-
-            if($user_permission -> contains('slug_name', $this -> routeName)){
-                return view('Archives.materials');
-            }else{
-                return redirect()->route('Dashboard');
-            }
-        }else{
+    /**
+     * Function to Show the Index Page of Material Archive
+     * Route: GET
+     * @return View
+     */ 
+    public function materials_list()
+    {
+        // If User is not logged in, redirect to login page
+        if (! auth::check())
             return redirect()->route('user_login_page');
-        }
+        // If user doesnt have the permissions, redirect to dashboard
+        $user_permission = $this->getUserPermissions();
+        if(! $user_permission -> contains('slug_name', $this->routeName))
+            return redirect()->route('Dashboard');
+
+        return view('Archives.materials');
     }
 
-    public function materials_list_datatables(){
-        $data = DB::table('materials')
-            ->select('*',  DB::raw('(CASE WHEN type = 1 THEN "Borrowing" WHEN type = 2 THEN "Room Use" END) AS material_type'))
-            ->where('status', 0);
+    /**
+     * Function to supply data on Material Archive Datatable
+     * Route: POST
+     * @param Request $request
+     * @return JSON Response
+     */
+    public function materials_list_datatables(Request $request)
+    {
+        // Block requests other than POST
+        if (! $request->isMethod('post')) 
+            abort(404);
 
-        $data2 = DB::table('materials_subject_link as a')
-            ->join('materials as b', 'a.mat_id', '=', 'b.materials_id')
-            ->join('materials_subject as c', 'a.sub_id', '=', 'c.id');
+        $materials = Material::withCount('materialCopies')
+            ->with('subjects')
+            ->where('status', 0)
+            ->withTrashed();
 
-
-            return DataTables::query($data)
-                ->addColumn('action', function ($row) {
-                    $btn = '<td></d></tr><div class="btn-group-vertical">
-                                <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->materials_id . ' data-type="materials" ><span class="fa fa-backward">&nbsp;&nbsp;</span>Restore</a>
-                            </div></td>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->toJson();
-
+        return DataTables::eloquent($materials)
+            ->addIndexColumn()
+            ->addColumn('action', function (Material $material) {
+                $btn = '<td></d></tr><div class="btn-group-vertical">
+                            <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $material->materials_id . ' data-type="materials" ><span class="fa fa-backward">&nbsp;&nbsp;</span>Restore</a>
+                        </div></td>';
+                return $btn;
+            })
+            ->addColumn('type', function (Material $material){
+                if ($material->type === 1)
+                    return 'Borrowing';
+                elseif ($material->type === 2)
+                    return 'Room Use';
+            })
+            ->addColumn('copies', function (Material $material){
+                return $material->material_copies_count;
+            })
+            // Title Column with Subjects
+            ->addColumn('title_with_subjects', function (Material $material){
+                
+                $tableData = $material->title . '<br>';
+                foreach ($material->subjects as $subject) 
+                {
+                    $tableData .= '<span class="badge border border-dark" style="background-color:' . $subject->background_color . '; color:' . $subject->text_color . ';">' . $subject->subject_name .'</span> ';
+                }
+                return $tableData;
+            })
+            ->rawColumns(['action', 'title_with_subjects'])
+            ->toJson();
     }
 
-    public function users_list(){
-        if(auth::check() == true){
-
-            $user_permission = db::table('user_links as a')
-                ->join('user_permission as b', 'a.id', '=' , 'b.link_id')
-                ->where('b.user_id', auth::user()->id)
-                ->where('b.status' , '=' , 'On')
-                ->Where('a.slug_name', 'LIKE' , '%'.$this->controller.'%')
-                ->Where('link_id', '!=', 0)
-                ->get();
-
-            if($user_permission -> contains('slug_name', $this -> routeName)){
-                return view('Archives.users');
-            }else{
-                return redirect()->route('Dashboard');
-            }
-        }else{
+    /**
+     * Function to Show the Index Page of User Archive
+     * Route: GET
+     * @return View
+     */ 
+    public function users_list()
+    {
+        // If User is not logged in, redirect to login page
+        if (! auth::check())
             return redirect()->route('user_login_page');
-        }
+        // If user doesnt have the permissions, redirect to dashboard
+        $user_permission = $this->getUserPermissions();
+        if(! $user_permission -> contains('slug_name', $this->routeName))
+            return redirect()->route('Dashboard');
+
+        return view('Archives.users');
     }
 
-    public function users_list_datatables(){
-        $data = db::table('users')
-            ->select("*","users.id as userid", DB::raw("CONCAT(lastname,',',firstname) as fullname"))
-            ->join('user_details', 'users.id', '=', 'user_details.user_id')
+    /**
+     * Function to supply data on User Archive Datatable
+     * Route: POST
+     * @param Request $request
+     * @return JSON Response
+     */
+    public function users_list_datatables(Request $request)
+    {
+        // Block requests other than POST
+        if (! $request->isMethod('post')) 
+            abort(404);
+
+        $users = User::with('userDetails')
             ->where('users.status', 0)
-            ->where('users.role_id', '!=', 1);
+            ->where('users.role_id', '!=', 1)
+            ->withTrashed();
 
-            return DataTables::query($data)
-                ->addColumn('action', function ($row) {
-                    $btn = '<td></d></tr><div class="btn-group-vertical">
-                                <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->userid . ' data-type="users" ><span class="fa fa-backward">&nbsp;&nbsp;</span>Restore</a>
-                            </div></td>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->toJson();
-    }
-
-    public function borrowing_list(){
-        if(auth::check() == true){
-            $user_permission = db::table('user_links as a')
-                ->join('user_permission as b', 'a.id', '=' , 'b.link_id')
-                ->where('b.user_id', auth::user()->id)
-                ->where('b.status' , '=' , 'On')
-                ->Where('a.slug_name', 'LIKE' , '%'.$this->controller.'%')
-                ->Where('link_id', '!=', 0)
-                ->get();
-
-            if($user_permission -> contains('slug_name', $this -> routeName)){
-                return view('Archives.borrowings');
-            }else{
-                return redirect()->route('Dashboard');
-            }
-        }else{
-            return redirect()->route('user_login_page');
-        }
-    }
-
-    public function borrowing_list_datatables(){
-        $data = DB::table('borrowings as a')
-            ->select('a.id as id','c.accnum as accnum','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"))
-            ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
-            ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
-            ->where('a.type' , 2)
-            ->where('a.status', 0);
-
-        return DataTables::query($data)
-            ->filterColumn('fullname', function($query, $keyword) {
-                $sql = "CONCAT(b.lastname,',',b.firstname)  like ?";
-                $query->whereRaw($sql, ["%{$keyword}%"]);
-            })
-            ->addColumn('action', function ($row) {
-                $btn = '<td></d></tr><div class="btn-group-vertical">
-                                <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->id . ' data-type="borrowings" ><span class="fa fa-backward">&nbsp;&nbsp;</span>Restore</a>
-                            </div></td>';
+        return DataTables::eloquent($users)
+            ->addIndexColumn()
+            ->addColumn('action', function (User $user) {
+                $btn = '<td>
+                            <div class="btn-group-vertical">
+                                <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $user->id . '  data-type="users" >
+                                    <span class="fa fa-backward">&nbsp;&nbsp;</span>Restore
+                                </a>
+                            </div>
+                        </td>';
                 return $btn;
+            })
+            ->addColumn('formatted_fullname_with_student_number', function(User $user){
+                return $user->userDetails->full_name_with_student_number;
             })
             ->rawColumns(['action'])
             ->toJson();
     }
 
-    public function issuing_list(){
-        if(auth::check() == true){
-            $user_permission = db::table('user_links as a')
-                ->join('user_permission as b', 'a.id', '=' , 'b.link_id')
-                ->where('b.user_id', auth::user()->id)
-                ->where('b.status' , '=' , 'On')
-                ->Where('a.slug_name', 'LIKE' , '%'.$this->controller.'%')
-                ->Where('link_id', '!=', 0)
-                ->get();
-
-            if($user_permission -> contains('slug_name', $this -> routeName)){
-                return view('Archives.issuing');
-            }else{
-                return redirect()->route('Dashboard');
-            }
-        }else{
+    /**
+     * Function to Show the Index Page of Borrowing Archive
+     * Route: GET
+     * @return View
+     */ 
+    public function borrowing_list()
+    {
+        // If User is not logged in, redirect to login page
+        if (! auth::check())
             return redirect()->route('user_login_page');
-        }
+        // If user doesnt have the permissions, redirect to dashboard
+        $user_permission = $this->getUserPermissions();
+        if(! $user_permission -> contains('slug_name', $this->routeName))
+            return redirect()->route('Dashboard');
+
+        return view('Archives.borrowings');
     }
 
+    /**
+     * Function to supply data on User Archive Datatable
+     * Route: POST
+     * @param Request $request
+     * @return JSON Response
+     */
+    public function borrowing_list_datatables(Request $request)
+    {
+        $borrowings = Borrowing::with('user.userDetails', 'materialCopy.material.subjects')
+            ->where('borrowings.status', 0)
+            ->where('borrowings.type', 2)
+            ->withTrashed(); 
 
-    public function issuing_list_datatables(){
-        $data = DB::table('borrowings as a')
-            ->select('a.id as id','c.accnum as accnum','a.date_borrowed as date_borrowed','a.date_returned as date_returned', DB::raw("CONCAT(b.lastname,',',b.firstname) as fullname"))
-            ->join('user_details as b', 'a.users_id', '=' , 'b.user_id')
-            ->join('materials as c', 'a.materials_id', '=', 'c.materials_id')
-            ->where('a.type' , 1)
-            ->where('a.status', 0);
-
-        return DataTables::query($data)
-            ->filterColumn('fullname', function($query, $keyword) {
-                $sql = "CONCAT(b.lastname,',',b.firstname)  like ?";
-                $query->whereRaw($sql, ["%{$keyword}%"]);
+        return DataTables::eloquent($borrowings)
+            ->addIndexColumn()
+            ->addColumn('formatted_fullname_with_student_number', function (Borrowing $borrowing){
+                return $borrowing->user->userDetails->full_name_with_student_number;
             })
-            ->addColumn('action', function ($row) {
-                $btn = '<td></d></tr><div class="btn-group-vertical">
-                                <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $row->id . ' data-type="borrowings" ><span class="fa fa-backward">&nbsp;&nbsp;</span>Restore</a>
-                            </div></td>';
+            // Material Title Column with Subjects
+            ->addColumn('material_title_with_subjects_and_accession_number', function (Borrowing $borrowing){
+                
+                $tableData = $borrowing->materialCopy->material->title . 
+                    '<br>' . 
+                    $borrowing->materialCopy->material->isbn . 
+                    '<br>' .
+                    $borrowing->materialCopy->accession_number . 
+                    '<br>';
+
+                foreach ($borrowing->materialCopy->material->subjects as $subject) 
+                {
+                    $tableData .= '<span class="badge border border-dark" style="background-color:' . $subject->background_color . '; color:' . $subject->text_color . ';">' . $subject->subject_name .'</span> ';
+                }
+                return $tableData;
+            })
+            ->addColumn('action', function (Borrowing $borrowing) {
+                $btn = '<td>
+                            <div class="btn-group-vertical">
+                                <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $borrowing->id . ' data-type="borrowings" >
+                                        <span class="fa fa-backward">&nbsp;&nbsp;</span>Restore
+                                </a>
+                            </div>
+                        </td>';
                 return $btn;
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'material_title_with_subjects_and_accession_number'])
             ->toJson();
     }
 
-    public function Archive_Restore(Request $request){
+    /**
+     * Function to Show the Index Page of Issuing Archive
+     * Route: GET
+     * @return View
+     */ 
+    public function issuing_list()
+    {
+        // If User is not logged in, redirect to login page
+        if (! auth::check())
+            return redirect()->route('user_login_page');
+        // If user doesnt have the permissions, redirect to dashboard
+        $user_permission = $this->getUserPermissions();
+        if(! $user_permission -> contains('slug_name', $this->routeName))
+            return redirect()->route('Dashboard');
 
-        if($request->type == "borrowings"){
-            db::table('borrowings')
-                ->where('id', $request->id)
-                ->update([
-                    'status' => 1
-                ]);
-        }
-        if($request->type == "users"){
-            db::table('users')
-                ->where('id', $request->id)
-                ->update([
-                    'status' => 1
-                ]);
-        }
-        if($request->type == "materials"){
-            db::table('materials')
-                ->where('materials_id', $request->id)
-                ->update([
-                    'status' => 1
-                ]);
-        }
+        return view('Archives.issuing');
+    }
 
-        return response()->json([
-            'status' => 'success'
-        ]);
+    /**
+     * Function to supply data on User Archive Datatable
+     * Route: POST
+     * @param Request $request
+     * @return JSON Response
+     */
+    public function issuing_list_datatables(Request $request)
+    {
+        $borrowings = Borrowing::with('user.userDetails', 'materialCopy.material.subjects')
+            ->where('borrowings.status', 0)
+            ->where('borrowings.type', 1)
+            ->withTrashed(); 
 
+        return DataTables::eloquent($borrowings)
+            ->addIndexColumn()
+            ->addColumn('formatted_fullname_with_student_number', function (Borrowing $borrowing){
+                return $borrowing->user->userDetails->full_name_with_student_number;
+            })
+            // Material Title Column with Subjects
+            ->addColumn('material_title_with_subjects_and_accession_number', function (Borrowing $borrowing){
+                
+                $tableData = $borrowing->materialCopy->material->title . 
+                    '<br>' . 
+                    $borrowing->materialCopy->material->isbn . 
+                    '<br>' .
+                    $borrowing->materialCopy->accession_number . 
+                    '<br>';
+
+                foreach ($borrowing->materialCopy->material->subjects as $subject) 
+                {
+                    $tableData .= '<span class="badge border border-dark" style="background-color:' . $subject->background_color . '; color:' . $subject->text_color . ';">' . $subject->subject_name .'</span> ';
+                }
+                return $tableData;
+            })
+            ->addColumn('action', function (Borrowing $borrowing) {
+                $btn = '<td>
+                            <div class="btn-group-vertical">
+                                <a type="button" class="btn btn-info data-edit" id="data-edit" data-id=' . $borrowing->id . ' data-type="borrowings" >
+                                        <span class="fa fa-backward">&nbsp;&nbsp;</span>Restore
+                                </a>
+                            </div>
+                        </td>';
+                return $btn;
+            })
+            ->rawColumns(['action', 'material_title_with_subjects_and_accession_number'])
+            ->toJson();
+    }
+
+    /**
+     * Function to restore a Model depending on type
+     * Route: POST
+     * @param Request $request
+     * @return JSON Response for SweetAlert
+     */
+    public function Archive_Restore(Request $request)
+    {
+        try {
+            if($request->type == "borrowings")
+            {
+                Borrowing::where('id', $request->id)
+                    ->withTrashed()
+                    ->update([
+                        'status' => 1,
+                        'deleted_at' => NULL,
+                        'updated_at' => now(),
+                    ]);
+            }
+
+            if($request->type == "users")
+            {
+                User::where('id', $request->id)
+                    ->withTrashed()
+                    ->update([
+                        'status' => 1,
+                        'deleted_at' => NULL,
+                        'updated_at' => now(),
+                    ]);
+            }
+
+            if($request->type == "materials")
+            {
+                Material::where('materials_id', $request->id)
+                    ->withTrashed()
+                    ->update([
+                        'status' => 1,
+                        'deleted_at' => NULL,
+                        'updated_at' => now(),
+                    ]);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Restore Success!',
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Restore Failed'
+            ]);
+        }
+    }
+
+    /**
+     * Function that returns the permissions of a User
+     * @return Collection
+     */ 
+    private function getUserPermissions()
+    {
+        $user_permission = db::table('user_links 
+            as a')
+            ->join('user_permission as b', 'a.id', '=', 'b.link_id')
+            ->where('b.user_id', auth::user()->id)
+            ->where('b.status', '=', 'On')
+            ->Where('a.slug_name', 'LIKE', '%' . $this->controller . '%')
+            ->Where('link_id', '!=', 0)
+            ->get();
+        return $user_permission;
     }
 }

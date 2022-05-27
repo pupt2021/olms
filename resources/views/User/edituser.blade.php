@@ -277,16 +277,12 @@
                         type: "post",
                         data: $(form).serialize(),
                         success: function(response){
-                            if(response.status == "success"){
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: response.message
-                                }).then((result) => {
-                                    window.location.href = "{{ url('Library/User') }}";
-                                });
-                            }else{
-
-                            }
+                            Swal.fire({
+                                icon: response.status,
+                                title: response.message
+                            }).then((result) => {
+                                location.reload();
+                            });
                         }
                     });
                 }

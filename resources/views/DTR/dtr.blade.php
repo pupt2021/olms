@@ -62,11 +62,10 @@
                                                         <thead class="text-center">
                                                         <tr>
                                                             <th class="text-center">ID NO</th>
-                                                            <th class="text-center">ACC NUM</th>
                                                             <th class="text-center">ISBN</th>
                                                             <th class="text-center">TITLE</th>
                                                             <th class="text-center">TYPE</th>
-                                                            <th class="text-center">STATUS</th>
+                                                            <th class="text-center">AVAILABLE COPIES</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody class="text-center">
@@ -135,11 +134,10 @@
             },
             columns: [
                 {data: 'materials_id', name: 'materials_id'},
-                {data: 'accnum', name: 'accnum'},
                 {data: 'isbn', name: 'isbn'},
                 {data: 'title', name: 'title'},
                 {data: 'material_type', name: 'material_type'},
-                {data: 'is_available', name: 'is_available'}
+                {data: 'available_copies', name: 'available_copies'}
             ],
             responsive: true,  "autoWidth": false,
             buttons: ["csv", "excel", "pdf", "print"]

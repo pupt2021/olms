@@ -178,8 +178,10 @@
 
                         </div>
                         <!-- /.card-body -->
-                        <div class="card-footer">
-                            <a href="{{ route('BorrowingDatatables') }}" class="btn btn-secondary">View All Borrowed Books</a>
+                        <div class="card-footer text-center">
+                            <a href="{{ route('Issuing.index') }}" class="btn btn-secondary">View All Borrowed Books</a>
+                            <a href="{{ route('Borrowing.index') }}" class="btn btn-secondary">View All Room Used Books</a>
+
                         </div>
                     </div>
                     <!-- /.card -->
@@ -265,8 +267,8 @@
                     dataType: 'JSON'
                 },
                 columns: [
-                    {data: 'id', name: 'a.id'},
-                    {data: 'accnum', name: 'c.accnum'},
+                    {data: 'id', name: 'extension_id'},
+                    {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'fullname', name: 'fullname'},
                     {data: 'extension_status', name: 'extension_status'},
                     {
@@ -292,7 +294,7 @@
                 },
                 columns: [
                     {data: 'id', name: 'a.id'},
-                    {data: 'accnum', name: 'c.accnum'},
+                    {data: 'accession_number', name: 'c.accession_number'},
                     {data: 'title', name:'title'},
                     {data: 'material_type', name: 'material_type'},
                     {data: 'fullname', name: 'fullname'},
@@ -305,13 +307,13 @@
                 var id = $(this).attr("data-id");
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "Do you want to accept this request extension!",
+                    text: "Do you want to accept this request extension?",
                     icon: 'info',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes!',
-                    cancelButtonText: 'no',
+                    confirmButtonText: 'Accept!',
+                    cancelButtonText: 'Deny',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -319,6 +321,8 @@
                             url: '{{ route('book_extension') }}' ,
                             data: {
                                 'extension_id' : id,
+                                // 'user_id': user_id,
+                                // 'borrowing_id' : borrowing_id,
                                 'type' : "accept"
                             }, // get all form field value in serialize form
                             success: function(response){

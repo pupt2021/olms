@@ -13,12 +13,11 @@
                             <thead class="text-center">
                             <tr>
                                 <th class="text-center">ID NO</th>
-                                <th class="text-center">ACC NUM</th>
                                 <th class="text-center">ISBN</th>
                                 <th class="text-center">TITLE</th>
                                 <th class="text-center">CALL No.</th>
                                 <th class="text-center">TYPE</th>
-                                <th class="text-center">STATUS</th>
+                                <th class="text-center">AVAILABLE COPIES</th>
                             </tr>
                             </thead>
                             <tbody class="text-center">

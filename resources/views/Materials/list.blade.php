@@ -23,160 +23,160 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <div class="">
-                                @if($user_perm -> contains('slug_name', "Material.store"))
-                                        <button type="button" class="btn  btn-primary btn-md col-md-2 btn-add" data-toggle="modal" data-target="#modal">
-                                            <span class="fa fa-plus"></span>
-                                            Add Materials
-                                        </button>
-                                       {{-- <button type="button" class="btn btn-primary btn-md col-md-2 float-right" data-toggle="modal" data-target="#modal">
-                                            <span class="fa fa-plus"></span>
-                                            Add Batch Materials
-                                        </button>--}}
-                                @endif
-                                <div class="modal" id="modal">
-                                    <div class="modal-dialog modal-xl">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Materials Form</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form id="form">
-                                                <div class="modal-body">
-                                                    {{ csrf_field() }}
-                                                    <input type="hidden" name="id" id="id">
-                                                    <div class="row">
-                                                        <div class="form-group col-md-12 for_edit">
-                                                            <label for="">Accession No. Template: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <select  class="form-control" name="structure" id="structure" placeholder="Enter Materials Structure">
-                                                                <option value=""> Choose option </option>
-                                                                @foreach($category as $category)
-                                                                    <option value="{{ $category->id }}"> {{ $category->cat_structure }} </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label for="">ISBN: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <input type="text" class="form-control" name="isbn" id="isbn" placeholder="Enter ISBN">
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label for="">Title:</label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <input type="text" class="form-control" name="title" id="title" placeholder="Enter Title">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6 for_edit">
-                                                        <label for="">Subject: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                        <select  class="select2" id="subject" name="subject[]" multiple="multiple" required style="width: 100%;">
-                                                            @foreach($subject as $subject)
-                                                                <option value="{{ $subject->id }}"> {{ $subject->subject_name }} </option>
-                                                            @endforeach
-                                                        </select>
-                                                        </div>
-                                                        <div class="form-group col-md-6 add_mask">
-                                                            <label for="">CALL NO:</label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <input type="text" class="form-control" name="callno" id="callno" placeholder="Enter Call No.">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label for="">Author:</label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <input type="text" class="form-control" name="author" id="author" placeholder="Enter Author">
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label for="">Publisher: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <input type="text" class="form-control" name="publisher" id="publisher" placeholder="Enter Publisher.">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label for="">Edition: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <select type="text" class="form-control" name="edition" id="edition" placeholder="Enter Edition: ">
-                                                                <option value="" > Choose Option</option>
-                                                                <option value="1st Edition">1st Edition</option>
-                                                                <option value="2nd Edition">2nd Edition</option>
-                                                                <option value="3rd Edition">3rd Edition</option>
-                                                                <option value="4th Edition">4th Edition</option>
-                                                                <option value="5th Edition">5th Edition</option>
-                                                                <option value="6th Edition">6th Edition</option>
-                                                                <option value="7th Edition">7th Edition</option>
-                                                                <option value="8th Edition">8th Edition</option>
-                                                                <option value="9th Edition">9th Edition</option>
-                                                                <option value="10th Edition">10th Edition</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label for="">Date Received: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <input type="date" class="form-control" name="daterec" id="daterec" placeholder="Enter Date Received: ">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-md-4">
-                                                            <label for="">Copyright:  </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <input type="number" class="form-control" name="copyright" id="copyright" placeholder="Enter Copyright: ">
-                                                        </div>
-                                                        <div class="form-group col-md-4">
-                                                            <label for="">Copies: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <input type="number" class="form-control" name="copies" value="0" min="0" id="copies" placeholder="Enter Copies: ">
-                                                        </div>
-                                                        <div class="form-group col-md-4">
-                                                            <label for="">Type:  </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
-                                                            <select type="text" class="form-control" name="type" id="type" placeholder="Enter Type: ">
-                                                                <option value="" > Choose Option</option>
-                                                                <option value="1"> Borrowing</option>
-                                                                <option value="2"> Room Use</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer justify-content-between">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <!-- /.modal-content -->
-                                    </div>
-                                    <!-- /.modal-dialog -->
+                            <div class="row d-flex justify-content-between">
+                                <div class="col"></div>
+                                
+                                <div class="col text-center">
+                                    <h1 class="display-4">List of Materials</h1>
                                 </div>
+                                
+                                @if($user_perm -> contains('slug_name', "Material.store"))
+                                    <div class="col d-flex align-items-center justify-content-end">
+                                        <button type="button" class="btn  btn-primary btn-add" data-toggle="modal" data-target="#modal">
+                                                <span class="fa fa-plus"></span>
+                                                Add Materials
+                                        </button>
+                                    </div>
+                                @else
+                                    <div class="col"></div>
+                                @endif
                             </div>
 
                         </div>
-                        <!-- /.card-header -->
                         <div class="card-body table-responsive">
                             <table id="datatable" class="table table-bordered table-striped">
                                 <thead class="text-center">
                                 <tr>
-                                    <th class="text-center">ID NO</th>
-                                    <th class="text-center">ACC NUM</th>
+                                    <th class="text-center">#</th>
                                     <th class="text-center">ISBN</th>
-                                    <th class="text-center">TITLE</th>
+                                    <th class="text-center" style="width: 40%;">TITLE</th>
                                     <th class="text-center">TYPE</th>
                                     <th class="text-center">COPIES</th>
-                                    @if($user_perm -> contains('slug_name', "Material.show") || $user_perm->contains('slug_name', 'MaterialsDelete'))
                                     <th class="text-center">ACTIONS</th>
-                                    @endif
                                 </tr>
                                 </thead>
                                 <tbody class="text-center">
 
                                 </tbody>
                             </table>
+                        </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
 
+            {{-- MATERIALS FORM MODAL --}}
+            <div class="modal" id="modal">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Materials Form</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
+                        <form id="form">
+                            <div class="modal-body">
+                                {{ csrf_field() }}
+                                <input type="hidden" id="id">
+
+                                {{-- Accession Template --}}
+                                <div class="row">
+                                    <div class="form-group col-md-12 for_edit">
+                                        <label for="">Accession No. Template: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <select  class="form-control" name="structure" id="structure" placeholder="Enter Materials Structure">
+                                            <option value=""> Choose option </option>
+                                            @foreach($category as $category)
+                                                <option value="{{ $category->id }}"> {{ $category->cat_structure }} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {{-- ISBN, Title --}}
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="">ISBN: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <input type="text" class="form-control" name="isbn" id="isbn" placeholder="Enter ISBN">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="">Title:</label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <input type="text" class="form-control" name="title" id="title" placeholder="Enter Title">
+                                    </div>
+                                </div>
+
+                                {{-- Subject Select --}}
+                                <div class="row">
+                                    <div class="form-group col-md-6 for_edit">
+                                    <label for="">Subject: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                    <select  class="select2" id="subject" name="subject[]" multiple="multiple" required style="width: 100%;">
+                                        @foreach($subject as $subject)
+                                            <option value="{{ $subject->id }}"> {{ $subject->subject_name }} </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                    <div class="form-group col-md-6 add_mask">
+                                        <label for="">CALL NO:</label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <input type="text" class="form-control" name="callno" id="callno" placeholder="Enter Call No.">
+                                    </div>
+                                </div>
+
+                                {{-- Author, Publisher --}}
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="">Author:</label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <input type="text" class="form-control" name="author" id="author" placeholder="Enter Author">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="">Publisher: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <input type="text" class="form-control" name="publisher" id="publisher" placeholder="Enter Publisher.">
+                                    </div>
+                                </div>
+
+                                {{-- Edition Select --}}
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="">Edition: </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <select type="text" class="form-control" name="edition" id="edition" placeholder="Enter Edition: ">
+                                            <option value="" > Choose Option</option>
+                                            <option value="1st Edition">1st Edition</option>
+                                            <option value="2nd Edition">2nd Edition</option>
+                                            <option value="3rd Edition">3rd Edition</option>
+                                            <option value="4th Edition">4th Edition</option>
+                                            <option value="5th Edition">5th Edition</option>
+                                            <option value="6th Edition">6th Edition</option>
+                                            <option value="7th Edition">7th Edition</option>
+                                            <option value="8th Edition">8th Edition</option>
+                                            <option value="9th Edition">9th Edition</option>
+                                            <option value="10th Edition">10th Edition</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {{-- Copyright, Type --}}
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="">Copyright:  </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <input type="number" class="form-control" name="copyright" id="copyright" placeholder="Enter Copyright: ">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="">Type:  </label><small style="color:red;">&nbsp&nbsp&nbsp(Required)</small>
+                                        <select type="text" class="form-control" name="type" id="type" placeholder="Enter Type: ">
+                                            <option value="" > Choose Option</option>
+                                            <option value="1"> Borrowing</option>
+                                            <option value="2"> Room Use</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
             </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
+        </div><!-- /.container-fluid -->
     </section>
 @endsection
 
@@ -202,6 +202,8 @@
             $('.btn-add').on('click', function(){
                 $('.for_edit').attr("hidden", false);
                 $('.add_mask').addClass("col-md-6").removeClass("col-md-12");
+                $('#id').removeAttr('name');
+                $('#id').removeAttr('value');
             });
 
             $('#form').validate({
@@ -215,31 +217,18 @@
                     title: {
                         required: true,
                     },
-                    // callno: {
-                    //     required: true,
-                    // },
                     author: {
                         required: true,
                     },
                     publisher: {
                         required: true,
                     },
-                    // edition: {
-                    //     required: true,
-                    // },
-                    // daterec: {
-                    //     required: true,
-                    // },
                     copyright: {
-                        required: true,
-                    },
-                    copies: {
                         required: true,
                     },
                     type: {
                         required: true,
                     },
-
                     subject: {
                         required: true,
                     },
@@ -259,28 +248,27 @@
                 submitHandler: function(form) {
                     jQuery.ajax({
                         url:'{{ route('Material.store') }}',
-                        type: "post",
+                        type: "POST",
                         data: {
                             '_token': $('input[name=_token]').val(),
                             'id' : $('#id').val(),
                         },
                         data: $('#form').serialize(),
                         success: function(response){
-                            if(response.status == "success"){
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: response.message
-                                }).then((result) => {
-                                    location.reload();
-                                });
-                            }else{
-
-                            }
+                            Swal.fire({
+                                icon: response.status,
+                                title: response.message
+                            }).then(function(){
+                                redirectURL = "{{ route('Material.show', ':id') }}";
+                                redirectURL = redirectURL.replace(':id', response.materialID);
+                                window.location.href = redirectURL;
+                            });
                         }
                     });
                 }
             });
 
+            // Loads data to Material List Datatable
             var table = $('#datatable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -290,19 +278,44 @@
                     type : "GET",
                     dataType: 'JSON'
                 },
+                // COLUMNS THAT HAVE SEARCHABLE: TRUE ARE QUERIED IN SEARCH BUTTON
                 columns: [
-                    {data: 'materials_id', name: 'materials_id'},
-                    {data: 'accnum', name: 'accnum'},
-                    {data: 'isbn', name: 'isbn'},
-                    {data: 'title', name: 'title'},
-                    {data: 'material_type', name: 'material_type'},
-                    {data: 'copies', name: 'copies'},
+                    {
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'isbn', 
+                        name: 'isbn',
+                        orderable: true, 
+                        searchable: true,
+                    },
+                    {
+                        data: 'title_with_subjects', 
+                        name: 'title',
+                        orderable: true, 
+                        searchable: true,
+                    },
+                    {
+                        data: 'type', 
+                        name: 'type',
+                        orderable: true, 
+                        searchable: false,
+                    },
+                    {
+                        data: 'copies', 
+                        name: 'copies',
+                        orderable: true, 
+                        searchable: false,
+                    },
                     @if($user_perm -> contains('slug_name', "Material.show") || $user_perm->contains('slug_name', 'MaterialsDelete'))
                     {
                         data: 'action',
                         name: 'action',
-                        orderable: true,
-                        searchable: true
+                        orderable: false, 
+                        searchable: false,
                     },
                     @endif
                 ],
@@ -314,10 +327,13 @@
             $(document).on('click', '.data-edit', function(){
                 $('#modal').modal('show');
                 var id = $(this).attr("data-id");
-                var url = '{{ route('Material.show', ":id") }}';
+                var url = '{{ route('Materials.ShowEditValues', ":id") }}';
                 url = url.replace(':id', id);
                 $.ajax({
-                    type:"GET",
+                    type:"POST",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
                     url: url,
                     // get all form field value in serialize form
                     success: function(response){
@@ -326,15 +342,14 @@
                             $('.for_edit').attr("hidden", true);
                             $('.add_mask').removeClass("col-md-6").addClass("col-md-12");
                             $('#id').val(response[0].materials_id);
+                            $('#id').attr('name', 'id');
                             $('#isbn').val(response[0].isbn);
                             $('#title').val(response[0].title);
                             $('#callno').val(response[0].callno);
                             $('#author').val(response[0].author);
                             $('#publisher').val(response[0].publisher);
                             $('#edition').val(response[0].edition);
-                            $('#daterec').val(response[0].date_received);
                             $('#copyright').val(response[0].copyright);
-                            $('#copies').val(response[0].copies);
                             $('#type').val(response[0].type);
                         }else{
                             swal.fire("Something is error please contact developer", "","error");

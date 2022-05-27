@@ -30,38 +30,10 @@
                                         Add Materials Subject
                                     </button>
                                 @endif
-                                <div class="modal" id="modal">
-                                    <div class="modal-dialog modal-md">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Materials Subject Form</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form id="form">
-                                                <div class="modal-body">
-                                                    {{ csrf_field() }}
-                                                    <input type="hidden" name="id" id="id">
-                                                    <div class="form-group">
-                                                        <label for="">Subject Name</label>
-                                                        <input type="text" class="form-control" name="subject_name" id="subject_name" placeholder="Enter Subject Name">
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer justify-content-between">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <!-- /.modal-content -->
-                                    </div>
-                                    <!-- /.modal-dialog -->
-                                </div>
+                                
                             </div>
 
-                        </div>
-                        <!-- /.card-header -->
+                        </div><!-- /.card-header -->
                         <div class="card-body table-responsive">
                             <table id="datatable" class="table table-bordered table-striped">
                                 <thead class="text-center">
@@ -78,16 +50,39 @@
                                 </tbody>
                             </table>
 
+                        </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+
+            {{-- MODAL --}}
+            <div class="modal" id="modal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Materials Subject Form</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
+                        <form id="form">
+                            <div class="modal-body">
+                                {{ csrf_field() }}
+                                <input type="hidden" name="id" id="id">
+                                <div class="form-group">
+                                    <label for="">Subject Name</label>
+                                    <input type="text" class="form-control" name="subject_name" id="subject_name" placeholder="Enter Subject Name">
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
             </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
+        </div><!-- /.container-fluid -->
     </section>
 @endsection
 
@@ -201,7 +196,7 @@
             });
 
 
-            $(document).on('click' , '.data-delete' , function(){a
+            $(document).on('click' , '.data-delete' , function(){
                 var id = $(this).attr("data-id");
                 Swal.fire({
                     title: 'Are you sure?',
@@ -238,7 +233,7 @@
 
                     }else{
                         Swal.fire(
-                            'Gender is not deleted!',
+                            'Material Subject is not deleted!',
                             '',
                             'info'
                         )

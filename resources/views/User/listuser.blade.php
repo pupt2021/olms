@@ -175,26 +175,6 @@
                                                             </div>
                                                         </div>
                                                     </section>
-                                                   {{-- <section id="role_details_faculty">
-
-                                                    </section>
-                                                    <section id="role_details_employee">
-
-                                                    </section>--}}
-                                                    {{--<div class="row">
-                                                        <div class="form-group col-md-4">
-                                                            <label for=""></label>
-                                                            <input type="text" class="form-control" name="" id="" placeholder="Enter">
-                                                        </div>
-                                                        <div class="form-group col-md-4">
-                                                            <label for=""></label>
-                                                            <input type="text" class="form-control" name="" id="" placeholder="Enter">
-                                                        </div>
-                                                        <div class="form-group col-md-4">
-                                                            <label for=""></label>
-                                                            <input type="text" class="form-control" name="" id="" placeholder="Enter">
-                                                        </div>
-                                                    </div>--}}
                                                 </div>
 
                                                 <div class="modal-footer justify-content-between">
@@ -202,15 +182,12 @@
                                                     <button type="submit" class="btn btn-primary">Save changes</button>
                                                 </div>
                                             </form>
-                                        </div>
-                                        <!-- /.modal-content -->
-                                    </div>
-                                    <!-- /.modal-dialog -->
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
                                 </div>
                             </div>
+                        </div><!-- /.card-header -->
 
-                        </div>
-                        <!-- /.card-header -->
                         <div class="card-body">
                             <table id="datatable" class="table table-bordered table-striped text-center">
                                 <thead>
@@ -353,8 +330,13 @@
                     dataType: 'JSON'
                 },
                 columns: [
-                    {data: 'userid', name: 'userid'},
-                    {data: 'fullname', name: 'fullname'},
+                    { 
+                        data: 'DT_RowIndex', 
+                        name: 'DT_RowIndex', 
+                        orderable: false, 
+                        searchable: false,
+                    },
+                    {data: 'fullname', name: 'user_details.lastname'},
                     {data: 'email', name: 'email'},
                     @if($user_perm -> contains('slug_name', "User.show") || $user_perm->contains('slug_name', 'UserDelete'))
                     {

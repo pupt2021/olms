@@ -23,57 +23,45 @@ class UserController extends Controller
         list($this -> controller, $action) = explode('Controller@', $controllerAction);
 
         $this -> routeName = Route::currentRouteName();
-
     }
 
     public function index()
     {
-        if(auth::check() == true){
-            $user_permission = \Illuminate\Support\Facades\DB::table('user_links as a')
-                ->join('user_permission as b', 'a.id', '=' , 'b.link_id')
-                ->where('b.user_id', auth::user()->id)
-                ->where('b.status' , '=' , 'On')
-                ->Where('a.slug_name', 'LIKE' , '%'.$this->controller.'%')
-                ->Where('link_id', '!=', 0)
-                ->get();
+        // If User is not logged in, redirect to login page
+        if (! auth::check())
+            return redirect()->route('user_login_page');
+        // If user doesnt have the permissions, redirect to dashboard
+        $user_permission = $this->getUserPermissions();
+        if (! $user_permission->contains('slug_name', $this->routeName))
+            return redirect()->route('Dashboard');
 
-            $role = db::table('user_role')
+        $role = db::table('user_role')
                 ->where('role_status', 1)
                 ->where('role_id', '!=' , 1)
                 ->get();
 
-            $gender = db::table('gender')
-                ->where('status', 1)
-                ->get();
+        $gender = db::table('gender')
+            ->where('status', 1)
+            ->get();
 
-            $course = db::table('courses')
-                ->where('status', 1)
-                ->get();
+        $course = db::table('courses')
+            ->where('status', 1)
+            ->get();
 
-            if($user_permission -> contains('slug_name', $this -> routeName)){
-                return view('User.listuser')
-                    ->with('role', $role)
-                    ->with('gender', $gender)
-                    ->with('course', $course)
-                    ->with('user_perm', $user_permission);
-            }else{
-                return redirect()->route('Dashboard');
-            }
-        }else{
-            return redirect()->route('user_login_page');
-        }
+        return view('User.listuser')
+            ->with('role', $role)
+            ->with('gender', $gender)
+            ->with('course', $course)
+            ->with('user_perm', $user_permission);
     }
-    public function create()
-    {
-        //
-    }
+
     public function store(Request $request)
     {
-        //
         extract($request->all());
 
-        if($id != '') {
-
+        // If user is new and ID is not set...
+        if($id != '') 
+        {
             db::table('user_details')
                 ->where('user_id', $id)
                 ->update([
@@ -93,9 +81,16 @@ class UserController extends Controller
                     'employee_status' => $employee_status ? $employee_status : '0',
                 ]);
 
-            return response()->json(['status' => 'success' , 'message' => "User Details is successfully updated"]);
+            return response()->json([
+                'status' => 'success' , 
+                'message' => "User Details is successfully updated"
+            ]);
 
-        }else{
+        }
+
+        // If user is existing and ID is set for editing...
+        else
+        {
             $user_id = db::table('users')->insertGetId([
                 'role_id' => $user_role,
                 'username' => $username,
@@ -121,15 +116,14 @@ class UserController extends Controller
                 'employee_status' => $employee_status,
             ]);
 
-            return response()->json(['status' => 'success' , 'message' => "User Data is successfully inserted"]);
+            return response()->json([
+                'status' => 'success' , 
+                'message' => "User Data is successfully inserted"]);
         }
-
-
     }
+
     public function show($id)
     {
-        //
-
         $role = db::table('user_role')
             ->where('role_status', 1)
             ->where('role_id', '!=' , 1)
@@ -155,37 +149,21 @@ class UserController extends Controller
             ->with('gender', $gender)
             ->with('course', $course)
             ->with('data', $data);
+    }
 
-
-    }
-    public function edit($id)
+    public function UserDatatables()
     {
-    }
-    public function update(Request $request, $id)
-    {
-        //
-    }
-    public function destroy($id)
-    {
-        //
-    }
-    public function UserDatatables(){
-
         $data = db::table('users')
             ->select("*","users.id as userid", DB::raw("CONCAT(lastname,',',firstname) as fullname"))
             ->join('user_details', 'users.id', '=', 'user_details.user_id')
             ->where('users.status', 1)
             ->where('users.role_id', '!=', 1);
 
-        $user_permission = \Illuminate\Support\Facades\DB::table('user_links as a')
-            ->join('user_permission as b', 'a.id', '=' , 'b.link_id')
-            ->where('b.user_id', auth::user()->id)
-            ->where('b.status' , '=' , 'On')
-            ->where('a.slug_name', 'LIKE' , '%'.$this->controller.'%')
-            ->where('b.link_id' , '!=' , 0)
-            ->get();
+        $user_permission = $this->getUserPermissions();
+
         if($user_permission -> contains('slug_name', 'User.show') && $user_permission -> contains('slug_name', 'UserDelete')) {
             return DataTables::query($data)
+                ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<td></d></tr><div class="btn-group-horizontally">
                                 <a type="button" class="btn btn-info data-edit" href=' . route('User.show', $row->id) . ' "><span class="fa fa-edit">&nbsp;&nbsp;</span>Edit</a>
@@ -197,6 +175,7 @@ class UserController extends Controller
                 ->toJson();
         }elseif($user_permission -> contains('slug_name', 'User.show')) {
             return DataTables::query($data)
+                ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<td></d></tr><div class="btn-group-horizontally">
                                 <a type="button" class="btn btn-info data-edit" href=' . route('User.show', $row->id) . ' "><span class="fa fa-edit">&nbsp;&nbsp;</span>Edit</a>
@@ -207,6 +186,7 @@ class UserController extends Controller
                 ->toJson();
         }elseif($user_permission -> contains('slug_name', 'UserDelete')) {
             return DataTables::query($data)
+                ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<td></d></tr><div class="btn-group-horizontally">
                                 <a type="button" class="btn btn-warning data-delete" id="data-delete" data-id=' . $row->userid . ' ><span class="fa fa-trash">&nbsp;&nbsp;</span>Delete</a>
@@ -217,10 +197,13 @@ class UserController extends Controller
                 ->toJson();
         }else{
             return DataTables::query($data)
+                ->addIndexColumn()
                 ->toJson();
         }
     }
-    public function UserDelete(Request $request){
+
+    public function UserDelete(Request $request)
+    {
         DB::table('users')
             ->where('id', $request->id)
             ->update([
@@ -232,7 +215,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function UserProfile_View(){
+    public function UserProfile_View()
+    {
         $role = db::table('user_role')
             ->where('role_status', 1)
             ->where('role_id', '!=' , 1)
@@ -260,7 +244,8 @@ class UserController extends Controller
             ->with('data', $data);
     }
 
-    public function UserProfile_UpdateView(){
+    public function UserProfile_UpdateView()
+    {
         $role = db::table('user_role')
             ->where('role_status', 1)
             ->where('role_id', '!=' , 1)
@@ -288,7 +273,8 @@ class UserController extends Controller
             ->with('data', $data);
     }
 
-    public function UserProfile_Update(Request $request){
+    public function UserProfile_Update(Request $request)
+    {
 
         extract($request->all());
 
@@ -328,11 +314,13 @@ class UserController extends Controller
 
     }
 
-    public function SearchBook(){
+    public function SearchBook()
+    {
         return view('UserProfile.searchbook');
     }
 
-    public function SearchBookDatatables(){
+    public function SearchBookDatatables()
+    {
         $data = \Illuminate\Support\Facades\DB::table('materials')
             ->select('*',  DB::raw('(CASE WHEN type = 1 THEN "ISSUING" WHEN type = 2 THEN "BORROWING" END) AS type'), DB::raw('(CASE WHEN is_available = 0 THEN "NOT AVAILABLE" WHEN is_available = 1 THEN "AVAILABLE" WHEN is_available = 2 THEN "RESERVED" END) AS is_available'))
             ->where('status', 1);
@@ -341,7 +329,22 @@ class UserController extends Controller
             ->toJson();
     }
 
-
+    /**
+     * Function that returns the permissions of a User
+     * @return Collection
+     */ 
+    private function getUserPermissions()
+    {
+        $user_permission = db::table('user_links 
+            as a')
+            ->join('user_permission as b', 'a.id', '=', 'b.link_id')
+            ->where('b.user_id', auth::user()->id)
+            ->where('b.status', '=', 'On')
+            ->Where('a.slug_name', 'LIKE', '%' . $this->controller . '%')
+            ->Where('link_id', '!=', 0)
+            ->get();
+        return $user_permission;
+    }
 
 
 }

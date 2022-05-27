@@ -19,8 +19,14 @@ class CreateUsersTable extends Migration
             $table->string('username')->unique();
             $table->string('email');
             $table->string('password');
+            $table->integer('limit')->nullable()->default(NULL);
+            $table->integer('status')->default(1);
+
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('role_id')->references('role_id')->on('user_role');
         });
     }
 
@@ -32,5 +38,6 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+        $table->dropForeign('role_id');
     }
 }
